@@ -1,27 +1,38 @@
 import * as React from 'react'
-import { Switch, Route, Redirect, withRouter } from 'react-router'
+import { Switch, Route, withRouter } from 'react-router'
 import Clients from './pages/Clients'
 import Login from './pages/Login'
+import { Layout } from 'antd'
+import Menu from './pages/Menu'
+import './style.css'
 
 @withRouter
 export default class Routes extends React.Component<any, any> {
   public render(): any {
     return (
-      <React.Fragment>
-        <Switch>
-          <Route path="/clients" component={Clients} />
-          <Route path="/login" component={Login} />
-        </Switch>
+      <Layout>
+        <Layout.Header>
+          <div className="logo">Light Billing v1.0</div>
+          {false && <Login />}
+        </Layout.Header>
+        <Layout>
+          <Layout.Sider>
+            <Menu />
+          </Layout.Sider>
 
-        {true && this.props.location.pathname !== '/login' && (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: this.props.location }
-            }}
-          />
-        )}
-      </React.Fragment>
+          <Layout.Content style={{ height: 'calc(100vh - 133px)' }}>
+            <Switch>
+              <Route path="/clients/:id?" component={Clients} />
+            </Switch>
+          </Layout.Content>
+        </Layout>
+
+        <Layout.Footer
+          style={{ textAlign: 'center', backgroundColor: 'white' }}
+        >
+          {`🐕& 🦊©${new Date().getFullYear()}`}
+        </Layout.Footer>
+      </Layout>
     )
   }
 }
