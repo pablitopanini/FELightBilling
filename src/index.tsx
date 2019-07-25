@@ -10,6 +10,11 @@ import { IStore } from './interfaces'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
 import 'react-app-polyfill/ie11'
+import { LocaleProvider, Layout } from 'antd'
+import Login from './pages/Login'
+import ruRU from 'antd/lib/locale-provider/ru_RU'
+import './style.css'
+import Menu from './pages/Menu'
 
 const composeEnhancers = composeWithDevTools({})
 
@@ -31,7 +36,34 @@ sagas.forEach(saga => {
 render(
   <Provider store={store}>
     <BrowserRouter>
-      <Routes />
+      <LocaleProvider locale={ruRU}>
+        <Layout>
+          <Layout.Header>
+            <div className="logo">Light Billing v1.0</div>
+            {false && <Login />}
+          </Layout.Header>
+          <Layout>
+            <Layout.Sider>
+              <Menu />
+            </Layout.Sider>
+
+            <Layout.Content
+              style={{
+                height: 'calc(100vh - 133px)',
+                backgroundColor: 'white'
+              }}
+            >
+              <Routes />
+            </Layout.Content>
+          </Layout>
+
+          <Layout.Footer
+            style={{ textAlign: 'center', backgroundColor: 'white' }}
+          >
+            {`🐕& 🦊©${new Date().getFullYear()}`}
+          </Layout.Footer>
+        </Layout>
+      </LocaleProvider>
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

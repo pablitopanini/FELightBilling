@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import { reducer as main } from './pages/Clients/store'
+import { reducer as houses } from './pages/Houses/store'
 
 const reducers = {
-  main
+  houses
 }
 
 export default combineReducers(reducers)

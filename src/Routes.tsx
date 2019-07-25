@@ -1,38 +1,36 @@
 import * as React from 'react'
-import { Switch, Route, withRouter } from 'react-router'
-import Clients from './pages/Clients'
-import Login from './pages/Login'
-import { Layout } from 'antd'
-import Menu from './pages/Menu'
-import './style.css'
+import {
+  Switch,
+  Route,
+  withRouter,
+  RouteComponentProps,
+  Redirect
+} from 'react-router'
+import Houses from './pages/Houses'
 
-@withRouter
-export default class Routes extends React.Component<any, any> {
-  public render(): any {
+const NoMatch = ({ location }: RouteComponentProps) => {
+  return (
+    <div>
+      <h3>
+        No match for <code>{location.pathname}</code>
+      </h3>
+    </div>
+  )
+}
+
+class Routes extends React.Component<RouteComponentProps> {
+  public render() {
+    if (this.props.location.pathname === '/') {
+      return <Redirect to="/houses" />
+    }
+
     return (
-      <Layout>
-        <Layout.Header>
-          <div className="logo">Light Billing v1.0</div>
-          {false && <Login />}
-        </Layout.Header>
-        <Layout>
-          <Layout.Sider>
-            <Menu />
-          </Layout.Sider>
-
-          <Layout.Content style={{ height: 'calc(100vh - 133px)' }}>
-            <Switch>
-              <Route path="/clients/:id?" component={Clients} />
-            </Switch>
-          </Layout.Content>
-        </Layout>
-
-        <Layout.Footer
-          style={{ textAlign: 'center', backgroundColor: 'white' }}
-        >
-          {`🐕& 🦊©${new Date().getFullYear()}`}
-        </Layout.Footer>
-      </Layout>
+      <Switch>
+        <Route path="/houses/:id?" component={Houses} />
+        <Route component={NoMatch} />
+      </Switch>
     )
   }
 }
+
+export default withRouter(Routes)

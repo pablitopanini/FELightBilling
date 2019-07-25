@@ -9,11 +9,11 @@ class Menu extends React.Component<RouteComponentProps> {
       <AntMenu
         mode="inline"
         selectedKeys={[this.props.location.pathname]}
-        style={{ height: '100%', borderRight: 0 }}
+        style={{ height: '100%' }}
         onClick={this.handleClick}
       >
         <AntMenu.ItemGroup key="catalogs" title="Справочники">
-          <AntMenu.Item key="/clients">Клиенты</AntMenu.Item>
+          <AntMenu.Item key="/houses">Дома</AntMenu.Item>
         </AntMenu.ItemGroup>
         <AntMenu.ItemGroup key="reports" title="Отчёты">
           <AntMenu.Item key="/report1">Отчет 1</AntMenu.Item>
