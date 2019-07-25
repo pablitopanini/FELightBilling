@@ -4,8 +4,8 @@ import { withRouter, RouteComponentProps } from 'react-router'
 import { Table, Button } from 'antd'
 import { IStore, IHousesStore, IHouse } from 'src/interfaces'
 import { actions } from './store'
-import { getColumns } from './constants'
-import House from './House'
+import { getColumns, pageName } from './constants'
+import EditModal from './EditModal'
 import { get } from 'lodash'
 
 interface State {
@@ -24,7 +24,7 @@ for (let i = 0; i < 100; i++) {
   })
 }
 
-class Houses extends React.Component<
+class Page extends React.Component<
   RouteComponentProps & IHousesStore & DispatchProp,
   State
 > {
@@ -33,7 +33,8 @@ class Houses extends React.Component<
     this.state = { data }
     this.columns = getColumns({
       handleReset: this.handleReset,
-      handleSearch: this.handleSearch
+      handleSearch: this.handleSearch,
+      handleRemove: this.handleRemove
     })
   }
 
@@ -46,6 +47,11 @@ class Houses extends React.Component<
   }
 
   handleReset = (clearFilters: any) => {
+    clearFilters()
+    this.setState({ searchText: '' })
+  }
+
+  handleRemove = (clearFilters: any) => {
     clearFilters()
     this.setState({ searchText: '' })
   }
@@ -77,13 +83,13 @@ class Houses extends React.Component<
           onRow={(record: IHouse) => {
             return {
               onDoubleClick: () => {
-                this.props.history.push(`/houses/${record.id}`)
+                this.props.history.push(`/${pageName}/${record.id}`)
               }
             }
           }}
         />
 
-        {get(this, 'props.match.params.id') && <House />}
+        {get(this, 'props.match.params.id') && <EditModal />}
       </React.Fragment>
     )
   }
@@ -92,5 +98,5 @@ class Houses extends React.Component<
 const mapState2Props = (state: IStore) => ({ ...state.houses })
 
 export default withRouter(
-  connect<IHousesStore, any, any, IStore>(mapState2Props)(Houses)
+  connect<IHousesStore, any, any, IStore>(mapState2Props)(Page)
 )

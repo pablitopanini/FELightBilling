@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Button, Icon, Input } from 'antd'
 
+export const pageName = 'houses'
+
 export const getColumnSearchProps = (
   dataIndex: any,
   handleSearch: any,
@@ -61,7 +63,11 @@ export const getColumnSearchProps = (
   }
 }
 
-export const getColumns = ({ operations, handleSearch, handleReset }: any) => [
+export const getColumns = ({
+  handleRemove,
+  handleSearch,
+  handleReset
+}: any) => [
   {
     title: 'address',
     dataIndex: 'address',
@@ -87,5 +93,14 @@ export const getColumns = ({ operations, handleSearch, handleReset }: any) => [
     title: 'comment',
     dataIndex: 'comment',
     width: '40%'
+  },
+  {
+    render: (text: any, record: any) => {
+      return (
+        <span>
+          <Icon type="delete" onClick={() => handleRemove(record.key)} />
+        </span>
+      )
+    }
   }
 ]
