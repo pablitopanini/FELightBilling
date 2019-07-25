@@ -21,6 +21,7 @@ function EditModal(props: IProps & RouteComponentProps) {
     >
       <p>Some contents...</p>
       <p>Some contents...</p>
+
       <p>Some contents...</p>
     </Modal>
   )
