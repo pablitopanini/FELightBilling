@@ -9,6 +9,7 @@ module.exports = {
   entry: path.join(__dirname, 'src/index.tsx'),
   output: {
     path: path.join(__dirname, 'build'),
+    publicPath: '/',
     filename: 'bundle.[hash].js'
   },
   resolve: {

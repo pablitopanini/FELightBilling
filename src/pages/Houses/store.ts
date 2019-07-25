@@ -1,19 +1,18 @@
 import { IAction, Payload, IHousesStore, IHouse } from 'src/interfaces'
+import { transform } from 'lodash'
 
-export const constants = {
-  GET_DATA: 'HOUSES.GET_DATA',
-  SET_PAGE: 'HOUSES.SET_PAGE'
+export const actionNames = {
+  getData: 'HOUSES.GET_DATA',
+  setPage: 'HOUSES.SET_PAGE',
+  setPageSize: 'HOUSES.SET_PAGE_SIZE'
 }
 
-export const actions = {
-  getData: () => ({
-    type: constants.GET_DATA
-  }),
-  setPage: (payload: number) => ({
-    type: constants.SET_PAGE,
+export const actions = transform(actionNames, (result: any, value, key) => {
+  result[key] = (payload: any) => ({
+    type: value,
     payload
   })
-}
+})
 
 const defaultData: IHouse[] = []
 
@@ -29,13 +28,25 @@ export const reducer: (
   action: IAction<Payload>
 ) => IHousesStore = (state: IHousesStore, action: IAction<Payload>) => {
   switch (action.type) {
-    case constants.GET_DATA:
+    case actionNames.getData:
       return {
         ...state,
         data: [] as IHouse[]
       }
 
-    // default:
+    case actionNames.setPage:
+      return {
+        ...state,
+        page: action.payload
+      }
+
+    case actionNames.setPageSize:
+      return {
+        ...state,
+        pageSize: action.payload
+      }
+
+    default:
+      return state || defaultState
   }
-  return state || defaultState
 }

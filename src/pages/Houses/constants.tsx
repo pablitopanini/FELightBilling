@@ -66,7 +66,6 @@ export const getColumns = ({ operations, handleSearch, handleReset }: any) => [
     title: 'address',
     dataIndex: 'address',
     width: '25%',
-    editable: true,
     sorter: true,
     ...getColumnSearchProps('address', handleSearch, handleReset)
   },
@@ -74,7 +73,6 @@ export const getColumns = ({ operations, handleSearch, handleReset }: any) => [
     title: 'number',
     dataIndex: 'number',
     width: '15%',
-    editable: true,
     sorter: true,
     ...getColumnSearchProps('number', handleSearch, handleReset)
   },
@@ -82,18 +80,12 @@ export const getColumns = ({ operations, handleSearch, handleReset }: any) => [
     title: 'additionalNumber',
     dataIndex: 'additionalNumber',
     width: '15%',
-    editable: true,
     sorter: true,
     ...getColumnSearchProps('additionalNumber', handleSearch, handleReset)
   },
   {
     title: 'comment',
     dataIndex: 'comment',
-    width: '40%',
-    editable: true
-  },
-  {
-    dataIndex: 'operation',
-    render: operations
+    width: '40%'
   }
 ]
