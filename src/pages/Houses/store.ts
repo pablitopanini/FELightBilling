@@ -3,6 +3,8 @@ import { transform } from 'lodash'
 
 export const actionNames = {
   getData: 'HOUSES.GET_DATA',
+  getDataSucceed: 'HOUSES.GET_DATA_SUCCEED',
+  getDataFailed: 'HOUSES.GET_DATA_FAILED',
   setPage: 'HOUSES.SET_PAGE',
   setPageSize: 'HOUSES.SET_PAGE_SIZE'
 }
@@ -28,10 +30,11 @@ export const reducer: (
   action: IAction<Payload>
 ) => IHousesStore = (state: IHousesStore, action: IAction<Payload>) => {
   switch (action.type) {
-    case actionNames.getData:
+    case actionNames.getDataSucceed:
       return {
         ...state,
-        data: [] as IHouse[]
+        data: action.payload.data as IHouse[],
+        total: action.payload.total
       }
 
     case actionNames.setPage:

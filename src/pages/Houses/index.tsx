@@ -9,19 +9,7 @@ import EditModal from './EditModal'
 import { get } from 'lodash'
 
 interface State {
-  data: any
   searchText?: String
-}
-
-const data: any = []
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    id: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`
-  })
 }
 
 class Page extends React.Component<
@@ -30,7 +18,7 @@ class Page extends React.Component<
 > {
   constructor(props: any) {
     super(props)
-    this.state = { data }
+    // this.state = { }
     this.columns = getColumns({
       handleReset: this.handleReset,
       handleSearch: this.handleSearch,
@@ -56,6 +44,10 @@ class Page extends React.Component<
     this.setState({ searchText: '' })
   }
 
+  public componentDidMount() {
+    this.props.dispatch(actions.getData())
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -63,7 +55,7 @@ class Page extends React.Component<
 
         <Table
           bordered
-          dataSource={this.state.data}
+          dataSource={this.props.data}
           columns={this.columns}
           pagination={{
             showTotal: (total: number, range: number[]) =>
