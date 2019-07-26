@@ -6,7 +6,8 @@ import { IStore, IHousesStore, IHouse } from '../../interfaces'
 import { actions } from './store'
 import { getColumns, pageName } from './constants'
 import EditModal from './EditModal'
-import { get } from 'lodash';
+import { get } from 'lodash'
+import { getPagination } from '../../utils/helpers'
 
 interface State {
   searchText?: String
@@ -50,7 +51,26 @@ class Page extends React.Component<
     this.props.history.push(`/${pageName}/new`)
   }
 
+  handleRowDoubleClick = (record: IHouse) => {
+    return {
+      onDoubleClick: () => {
+        this.props.history.push(`/${pageName}/${record.id}`)
+      }
+    }
+  }
+
   render() {
+    const pagination = getPagination({
+      onChange: (page: number) => {
+        this.props.dispatch(actions.setPage(page))
+      },
+      pageSize: this.props.pageSize,
+      onShowSizeChange: (current: number, size: number) => {
+        this.props.dispatch(actions.setPageSize(size))
+      },
+      total: this.props.total
+    })
+
     return (
       <React.Fragment>
         <Button onClick={this.create} style={{ margin: 16 }} icon="plus" />
@@ -59,28 +79,8 @@ class Page extends React.Component<
           bordered
           dataSource={this.props.list}
           columns={this.columns}
-          pagination={{
-            showTotal: (total: number, range: number[]) =>
-              `${range[0]}-${range[1]} из ${total}`,
-            showSizeChanger: true,
-            onChange: (page: number) => {
-              this.props.dispatch(actions.setPage(page))
-            },
-            defaultPageSize: 10,
-            pageSize: this.props.pageSize,
-            pageSizeOptions: ['10', '50', '100'],
-            onShowSizeChange: (current: number, size: number) => {
-              this.props.dispatch(actions.setPageSize(size))
-            },
-            total: this.props.total
-          }}
-          onRow={(record: IHouse) => {
-            return {
-              onDoubleClick: () => {
-                this.props.history.push(`/${pageName}/${record.id}`)
-              }
-            }
-          }}
+          pagination={pagination}
+          onRow={this.handleRowDoubleClick}
         />
 
         {get(this, 'props.match.params.id') && <EditModal />}
