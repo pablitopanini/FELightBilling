@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Button, Icon, Input } from 'antd'
+import { Button, Icon, Input, Popconfirm } from 'antd'
 
 export const pageName = 'houses'
+export const apiUrl = '/api/House/House'
 
 export const getColumnSearchProps = (
   dataIndex: any,
@@ -98,7 +99,9 @@ export const getColumns = ({
     render: (text: any, record: any) => {
       return (
         <span>
-          <Icon type="delete" onClick={() => handleRemove(record.key)} />
+          <Popconfirm title="Удалить?" onConfirm={() => handleRemove(record)}>
+            <Icon type="delete" />
+          </Popconfirm>
         </span>
       )
     }

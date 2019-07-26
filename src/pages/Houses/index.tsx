@@ -2,11 +2,11 @@ import * as React from 'react'
 import { connect, DispatchProp } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router'
 import { Table, Button } from 'antd'
-import { IStore, IHousesStore, IHouse } from 'src/interfaces'
+import { IStore, IHousesStore, IHouse } from '../../interfaces'
 import { actions } from './store'
 import { getColumns, pageName } from './constants'
 import EditModal from './EditModal'
-import { get } from 'lodash'
+import { get } from 'lodash';
 
 interface State {
   searchText?: String
@@ -18,7 +18,6 @@ class Page extends React.Component<
 > {
   constructor(props: any) {
     super(props)
-    // this.state = { }
     this.columns = getColumns({
       handleReset: this.handleReset,
       handleSearch: this.handleSearch,
@@ -39,23 +38,26 @@ class Page extends React.Component<
     this.setState({ searchText: '' })
   }
 
-  handleRemove = (clearFilters: any) => {
-    clearFilters()
-    this.setState({ searchText: '' })
+  handleRemove = (record: any) => {
+    this.props.dispatch(actions.removeItem(record))
   }
 
   public componentDidMount() {
-    this.props.dispatch(actions.getData())
+    this.props.dispatch(actions.getList())
+  }
+
+  create = () => {
+    this.props.history.push(`/${pageName}/new`)
   }
 
   render() {
     return (
       <React.Fragment>
-        <Button onClick={() => {}} style={{ margin: 16 }} icon="plus" />
+        <Button onClick={this.create} style={{ margin: 16 }} icon="plus" />
 
         <Table
           bordered
-          dataSource={this.props.data}
+          dataSource={this.props.list}
           columns={this.columns}
           pagination={{
             showTotal: (total: number, range: number[]) =>

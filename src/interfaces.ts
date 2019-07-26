@@ -13,10 +13,11 @@ export interface IHouse {
 }
 
 export interface IHousesStore {
-  data: IHouse[]
+  list: IHouse[]
   page: number
   pageSize: number
   total: number
+  item?: IHouse
 }
 
 export interface IStore {
@@ -24,3 +25,7 @@ export interface IStore {
 }
 
 export type Payload = any
+
+export interface IGlobalStore {
+  lastError: any
+}

@@ -18,6 +18,10 @@ export default {
 
   delete: (...params: any[]) => {
     return run('delete', ...params)
+  },
+
+  patch: (...params: any[]) => {
+    return run('patch', ...params)
   }
 }
 
