@@ -12,53 +12,11 @@ import { getPagination } from '../../utils/helpers'
 class Page extends React.Component<
   RouteComponentProps & IHousesStore & DispatchProp
 > {
-  constructor(props: any) {
-    super(props)
-    this.columns = getColumns({
-      handleSearch: this.handleSearch,
-      handleRemove: this.handleRemove
-    })
-  }
-
-  columns: any[] = []
-  searchInput: any
-
-  handleSearch = (dataIndex: string, value: any, confirm: any) => {
-    confirm()
-    this.props.dispatch(actions.setFilter({ [dataIndex]: value }))
-  }
-
-  handleRemove = (record: any) => {
-    this.props.dispatch(actions.removeItem(record))
-  }
-
-  componentDidMount() {
+  public componentDidMount() {
     this.props.dispatch(actions.getList())
   }
 
-  create = () => {
-    this.props.history.push(`/${pageName}/new`)
-  }
-
-  handleRowDoubleClick = (record: IHouse) => {
-    return {
-      onDoubleClick: () => {
-        this.props.history.push(`/${pageName}/${record.id}`)
-      }
-    }
-  }
-
-  handleTableChange = (_: any, __: any, { field: filedName, order }: any) => {
-    this.props.dispatch(
-      actions.setSort({
-        filedName,
-        order:
-          order === 'ascend' ? 'asc' : order === 'descend' ? 'desc' : undefined
-      })
-    )
-  }
-
-  render() {
+  public render() {
     const pagination = getPagination({
       onChange: (page: number) => {
         page !== this.props.page && this.props.dispatch(actions.setPage(page))
@@ -72,12 +30,19 @@ class Page extends React.Component<
 
     return (
       <React.Fragment>
-        <Button onClick={this.create} style={{ margin: 16 }} icon="plus" />
+        <Button
+          onClick={this.handleCreate}
+          style={{ margin: 16 }}
+          icon="plus"
+        />
 
         <Table
           bordered
           dataSource={this.props.list}
-          columns={this.columns}
+          columns={getColumns({
+            handleSearch: this.handleSearch,
+            handleRemove: this.handleRemove
+          })}
           pagination={pagination}
           onRow={this.handleRowDoubleClick}
           onChange={this.handleTableChange}
@@ -85,6 +50,41 @@ class Page extends React.Component<
 
         {get(this, 'props.match.params.id') && <EditModal />}
       </React.Fragment>
+    )
+  }
+
+  private handleSearch = (dataIndex: string, value: any, confirm: any) => {
+    confirm()
+    this.props.dispatch(actions.setFilter({ [dataIndex]: value }))
+  }
+
+  private handleRemove = (record: any) => {
+    this.props.dispatch(actions.removeItem(record))
+  }
+
+  private handleCreate = () => {
+    this.props.history.push(`/${pageName}/new`)
+  }
+
+  private handleRowDoubleClick = (record: IHouse) => {
+    return {
+      onDoubleClick: () => {
+        this.props.history.push(`/${pageName}/${record.id}`)
+      }
+    }
+  }
+
+  private handleTableChange = (
+    _: any,
+    __: any,
+    { field: filedName, order }: any
+  ) => {
+    this.props.dispatch(
+      actions.setSort({
+        filedName,
+        order:
+          order === 'ascend' ? 'asc' : order === 'descend' ? 'desc' : undefined
+      })
     )
   }
 }

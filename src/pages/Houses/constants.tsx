@@ -77,7 +77,9 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: 'Комментарий',
     dataIndex: 'comment',
-    width: '40%'
+    width: '40%',
+    sorter: true,
+    ...getColumnSearchProps('comment', handleSearch)
   },
   {
     render: (text: any, record: any) => {
