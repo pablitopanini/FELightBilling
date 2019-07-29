@@ -2,59 +2,52 @@ import { IAction, Payload, IHousesStore, IHouse } from '../../interfaces'
 import { getActions } from '../../utils/helpers'
 import { notification } from 'antd'
 import { createBrowserHistory } from 'history'
-import { pageName } from './constants'
+import { pageName, storageName } from './constants'
 
-export interface IActionNames {
-  getList: string
-  getListSucceed: string
-  setPage: string
-  setPageSize: string
-  saveItem: string
-  saveItemSucceed: string
-  getItem: string
-  getItemSucceed: string
-  getItemFailed: string
-  clearItem: string
-  removeItem: string
-  removeItemSucceed: string
+export interface IActions<T> {
+  getList: T
+  getListSucceed: T
+  setPage: T
+  setPageSize: T
+  saveItem: T
+  saveItemSucceed: T
+  getItem: T
+  getItemSucceed: T
+  getItemFailed: T
+  clearItem: T
+  removeItem: T
+  removeItemSucceed: T
+  setFilter: T
+  setSort: T
 }
 
-export interface IActions {
-  getList: (payload?: any) => IAction<any>
-  getListSucceed: (payload?: any) => IAction<any>
-  setPage: (payload?: any) => IAction<any>
-  setPageSize: (payload?: any) => IAction<any>
-  saveItem: (payload?: any) => IAction<any>
-  saveItemSucceed: (payload?: any) => IAction<any>
-  getItem: (payload?: any) => IAction<any>
-  getItemSucceed: (payload?: any) => IAction<any>
-  getItemFailed: (payload?: any) => IAction<any>
-  clearItem: (payload?: any) => IAction<any>
-  removeItem: (payload?: any) => IAction<any>
-  removeItemSucceed: (payload?: any) => IAction<any>
+export const actionNames: IActions<string> = {
+  getList: `${storageName}.GET_LIST`,
+  getListSucceed: `${storageName}.GET_LIST_SUCCEED`,
+
+  setPage: `${storageName}.SET_PAGE`,
+  setPageSize: `${storageName}.SET_PAGE_SIZE`,
+
+  saveItem: `${storageName}.SAVE_ITEM`,
+  saveItemSucceed: `${storageName}.SAVE_ITEM_SUCCEED`,
+
+  getItem: `${storageName}.GET_ITEM`,
+  getItemSucceed: `${storageName}.GET_ITEM_SUCCEED`,
+  getItemFailed: `${storageName}.GET_ITEM_FAILED`,
+
+  clearItem: `${storageName}.CLEAR_ITEM`,
+
+  removeItem: `${storageName}.REMOVE_ITEM`,
+  removeItemSucceed: `${storageName}.REMOVE_ITEM_SUCCEED`,
+
+  setFilter: `${storageName}.SET_FILTER`,
+  setSort: `${storageName}.SET_SORT`
 }
 
-export const actionNames: IActionNames = {
-  getList: 'HOUSES.GET_LIST',
-  getListSucceed: 'HOUSES.GET_LIST_SUCCEED',
-
-  setPage: 'HOUSES.SET_PAGE',
-  setPageSize: 'HOUSES.SET_PAGE_SIZE',
-
-  saveItem: 'HOUSES.SAVE_ITEM',
-  saveItemSucceed: 'HOUSES.SAVE_ITEM_SUCCEED',
-
-  getItem: 'HOUSES.GET_ITEM',
-  getItemSucceed: 'HOUSES.GET_ITEM_SUCCEED',
-  getItemFailed: 'HOUSES.GET_ITEM_FAILED',
-
-  clearItem: 'HOUSES.CLEAR_ITEM',
-
-  removeItem: 'HOUSES.REMOVE_ITEM',
-  removeItemSucceed: 'HOUSES.REMOVE_ITEM_SUCCEED'
-}
-
-export const actions = getActions<IActions, IActionNames>(actionNames)
+export const actions = getActions<
+  IActions<(payload?: any) => IAction<any>>,
+  IActions<string>
+>(actionNames)
 
 const defaultData: IHouse[] = []
 
@@ -126,6 +119,18 @@ export const reducer: (
         description: 'Данные успешно удалены'
       })
       return state
+
+    case actionNames.setFilter:
+      return {
+        ...state,
+        filter: { ...state.filter, ...action.payload }
+      }
+
+    case actionNames.setSort:
+      return {
+        ...state,
+        sort: action.payload
+      }
 
     default:
       return state || defaultState

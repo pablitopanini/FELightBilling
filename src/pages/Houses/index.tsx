@@ -9,18 +9,12 @@ import EditModal from './EditModal'
 import { get } from 'lodash'
 import { getPagination } from '../../utils/helpers'
 
-interface State {
-  searchText?: String
-}
-
 class Page extends React.Component<
-  RouteComponentProps & IHousesStore & DispatchProp,
-  State
+  RouteComponentProps & IHousesStore & DispatchProp
 > {
   constructor(props: any) {
     super(props)
     this.columns = getColumns({
-      handleReset: this.handleReset,
       handleSearch: this.handleSearch,
       handleRemove: this.handleRemove
     })
@@ -29,21 +23,16 @@ class Page extends React.Component<
   columns: any[] = []
   searchInput: any
 
-  handleSearch = (selectedKeys: any, confirm: any) => {
+  handleSearch = (dataIndex: string, value: any, confirm: any) => {
     confirm()
-    this.setState({ searchText: selectedKeys[0] })
-  }
-
-  handleReset = (clearFilters: any) => {
-    clearFilters()
-    this.setState({ searchText: '' })
+    this.props.dispatch(actions.setFilter({ [dataIndex]: value }))
   }
 
   handleRemove = (record: any) => {
     this.props.dispatch(actions.removeItem(record))
   }
 
-  public componentDidMount() {
+  componentDidMount() {
     this.props.dispatch(actions.getList())
   }
 
@@ -59,10 +48,20 @@ class Page extends React.Component<
     }
   }
 
+  handleTableChange = (_: any, __: any, { field: filedName, order }: any) => {
+    this.props.dispatch(
+      actions.setSort({
+        filedName,
+        order:
+          order === 'ascend' ? 'asc' : order === 'descend' ? 'desc' : undefined
+      })
+    )
+  }
+
   render() {
     const pagination = getPagination({
       onChange: (page: number) => {
-        this.props.dispatch(actions.setPage(page))
+        page !== this.props.page && this.props.dispatch(actions.setPage(page))
       },
       pageSize: this.props.pageSize,
       onShowSizeChange: (current: number, size: number) => {
@@ -81,6 +80,7 @@ class Page extends React.Component<
           columns={this.columns}
           pagination={pagination}
           onRow={this.handleRowDoubleClick}
+          onChange={this.handleTableChange}
         />
 
         {get(this, 'props.match.params.id') && <EditModal />}

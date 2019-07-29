@@ -1,4 +1,4 @@
-import { call, put, takeEvery, select } from 'redux-saga/effects'
+import { call, put, takeEvery, select, takeLatest } from 'redux-saga/effects'
 import { actionNames } from './store'
 import { actionNames as globalActionNames } from '../../reducer'
 import rest from './rest'
@@ -11,19 +11,26 @@ export default {
     yield takeEvery(actionNames.saveItemSucceed, getList)
     yield takeEvery(actionNames.getItem, getItem)
     yield takeEvery(actionNames.removeItem, removeItem)
-    yield takeEvery(actionNames.removeItemSucceed, getList)
+
+    yield takeLatest(actionNames.removeItemSucceed, getList)
+    yield takeLatest(actionNames.setPage, getList)
+    yield takeLatest(actionNames.setPageSize, getList)
+    yield takeLatest(actionNames.setFilter, getList)
+    yield takeLatest(actionNames.setSort, getList)
   }
 }
 
 function* getList(action: IAction<Payload>) {
   try {
     const {
-      houses: { page, pageSize }
+      houses: { page, pageSize, filter, sort }
     }: IStore = yield select()
 
     const res = yield call(rest.getList, {
       skip: pageSize * (page - 1),
-      limit: pageSize
+      limit: pageSize,
+      sort,
+      filter
     })
 
     yield put({

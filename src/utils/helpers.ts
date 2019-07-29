@@ -9,7 +9,7 @@ export const getActions = <T, A>(actionNames: A) =>
   }) as T
 
 interface IPaginationParams {
-  onChange: (page: number) => void
+  onChange?: (page: number) => void
   pageSize: number
   onShowSizeChange: (current: number, size: number) => void
   total: number
