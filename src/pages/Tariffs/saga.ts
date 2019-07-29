@@ -3,6 +3,7 @@ import { actionNames } from './store'
 import { actionNames as globalActionNames } from '../../reducer'
 import rest from './rest'
 import { IAction, Payload, IStore } from 'src/interfaces'
+import { pageName } from './constants'
 
 export default {
   *sagas() {
@@ -23,7 +24,7 @@ export default {
 function* getList(action: IAction<Payload>) {
   try {
     const {
-      houses: { page, pageSize, filter, sort }
+      [pageName]: { page, pageSize, filter, sort }
     }: IStore = yield select()
 
     const res = yield call(rest.getList, {

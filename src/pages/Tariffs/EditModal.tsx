@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { Modal, Form, Input, Button } from 'antd'
+import { Modal, Form, Input, Button, Checkbox, InputNumber } from 'antd'
 import { withRouter, RouteComponentProps } from 'react-router'
 import { connect, DispatchProp } from 'react-redux'
 import { IStore } from '../../interfaces'
 import { pageName, IPageStore } from './constants'
 import { FormProps } from 'antd/lib/form'
 import { actions } from './store'
-import { get } from 'lodash'
+import { get, reduce } from 'lodash'
 
 export type IProps = RouteComponentProps & FormProps & DispatchProp & IPageStore
 
@@ -22,11 +22,11 @@ const requiredRules = {
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 }
+    sm: { span: 9 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 18 }
+    sm: { span: 15 }
   }
 }
 
@@ -59,22 +59,20 @@ class EditModal extends React.Component<IProps, any> {
   }
 
   initFieldsValues = () => {
-    // this.props.item &&
-    //   this.props.form &&
-    //   this.props.form!.setFields({
-    //     address: {
-    //       value: this.props.item.address
-    //     },
-    //     number: {
-    //       value: this.props.item.number
-    //     },
-    //     additionalNumber: {
-    //       value: this.props.item.additionalNumber
-    //     },
-    //     comment: {
-    //       value: this.props.item.comment
-    //     }
-    //   })
+    if (this.props.form) {
+      if (this.props.item) {
+        this.props.form.setFields(
+          reduce(
+            this.props.item,
+            (result, value, key) => {
+              result[key] = { value }
+              return result
+            },
+            {}
+          )
+        )
+      }
+    }
   }
 
   handleCancel = () => {
@@ -87,6 +85,7 @@ class EditModal extends React.Component<IProps, any> {
         this.props.dispatch(
           actions.saveItem({
             id: get(this, 'props.item.id', undefined),
+            type: 1,
             ...values
           })
         )
@@ -116,24 +115,38 @@ class EditModal extends React.Component<IProps, any> {
         closable={false}
       >
         <Form {...formItemLayout}>
-          <Form.Item label="Улица">
-            {getFieldDecorator('address', {
+          <Form.Item label="Название">
+            {getFieldDecorator('name', {
               ...requiredRules
             })(<Input />)}
           </Form.Item>
 
-          <Form.Item label="Номер">
-            {getFieldDecorator('number', {
-              ...requiredRules
-            })(<Input />)}
+          <Form.Item label="Периодический">
+            {getFieldDecorator('isPeriodic', {
+              valuePropName: 'checked'
+            })(<Checkbox />)}
           </Form.Item>
 
-          <Form.Item label="Корпус">
-            {getFieldDecorator('additionalNumber')(<Input />)}
+          <Form.Item label="Входящая скорость">
+            {getFieldDecorator('inputRate', {
+              ...requiredRules
+            })(<InputNumber />)}
+          </Form.Item>
+
+          <Form.Item label="Исходящая скорость">
+            {getFieldDecorator('outputRate', {
+              ...requiredRules
+            })(<InputNumber />)}
+          </Form.Item>
+
+          <Form.Item label="Стоимость">
+            {getFieldDecorator('cost', {
+              ...requiredRules
+            })(<InputNumber />)}
           </Form.Item>
 
           <Form.Item label="Комментарий">
-            {getFieldDecorator('comment')(<Input />)}
+            {getFieldDecorator('comment')(<Input.TextArea />)}
           </Form.Item>
         </Form>
       </Modal>
@@ -144,7 +157,7 @@ class EditModal extends React.Component<IProps, any> {
 const EditModalForm = Form.create({ name: `${pageName}_edit_form` })(EditModal)
 
 export default withRouter(
-  connect<any, any, any, any>((state: IStore) => ({ ...state.houses }))(
+  connect<any, any, any, any>((state: IStore) => ({ ...state[pageName] }))(
     EditModalForm
   )
 )

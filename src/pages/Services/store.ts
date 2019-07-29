@@ -57,7 +57,7 @@ const defaultState: IPageStore = {
   pageSize: 10,
   total: 0,
   filter: {
-    type: 1
+    type: 2
   }
 }
 

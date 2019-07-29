@@ -4,7 +4,7 @@ export interface IAction<T> extends AnyAction {
   payload?: T
 }
 
-export type Filter<T> = { [P in keyof T]?: string }
+export type Filter<T> = { [P in keyof T]?: string | number | boolean }
 
 export type Sort<T> = {
   fieldName: keyof T
@@ -48,6 +48,7 @@ export interface ITariffsStore extends IPageStore<ITariff> {}
 export interface IStore {
   houses: IHousesStore
   tariffs: ITariffsStore
+  services: ITariffsStore
 }
 
 export type Payload = any

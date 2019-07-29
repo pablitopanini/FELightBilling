@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Icon, Popconfirm, Checkbox } from 'antd'
-import { getColumnSearchProps } from '../..//utils/helpers'
+import { getColumnSearchProps } from '../../utils/helpers'
 import { ITariffsStore, ITariff } from '../../interfaces'
 
-export const pageName = 'tariffs'
+export const pageName = 'services'
 export const apiUrl = '/api/Tariff/Tariff'
-export const actionPrefix: String = 'TARIFFS'
+export const actionPrefix: String = 'SERVICES'
 export interface IPageStore extends ITariffsStore {}
 export interface IItem extends ITariff {}
 
@@ -26,20 +26,6 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
     )
   },
   {
-    title: 'Входящая скорость',
-    dataIndex: 'inputRate',
-    width: '15%',
-    sorter: true,
-    ...getColumnSearchProps('inputRate', handleSearch)
-  },
-  {
-    title: 'Исходящая скорость',
-    dataIndex: 'outputRate',
-    width: '15%',
-    sorter: true,
-    ...getColumnSearchProps('outputRate', handleSearch)
-  },
-  {
     title: 'Стоимость',
     dataIndex: 'cost',
     width: '10%',
@@ -49,7 +35,7 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: 'Комментарий',
     dataIndex: 'comment',
-    width: '20%',
+    width: '50%',
     ...getColumnSearchProps('comment', handleSearch)
   },
   {

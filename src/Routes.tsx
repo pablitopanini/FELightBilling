@@ -8,6 +8,7 @@ import {
 } from 'react-router'
 import Houses from './pages/Houses'
 import Tariffs from './pages/Tariffs'
+import Services from './pages/Services'
 
 const NoMatch = ({ location }: RouteComponentProps) => {
   return (
@@ -29,6 +30,7 @@ class Routes extends React.Component<RouteComponentProps> {
       <Switch>
         <Route path="/houses/:id?" component={Houses} />
         <Route path="/tariffs/:id?" component={Tariffs} />
+        <Route path="/services/:id?" component={Services} />
         <Route component={NoMatch} />
       </Switch>
     )
