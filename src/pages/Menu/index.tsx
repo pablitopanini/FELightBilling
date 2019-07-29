@@ -14,6 +14,8 @@ class Menu extends React.Component<RouteComponentProps> {
       >
         <AntMenu.ItemGroup key="catalogs" title="Справочники">
           <AntMenu.Item key="/houses">Дома</AntMenu.Item>
+          <AntMenu.Item key="/tariffs">Тарифы</AntMenu.Item>
+          <AntMenu.Item key="/services">Услуги</AntMenu.Item>
         </AntMenu.ItemGroup>
         <AntMenu.ItemGroup key="reports" title="Отчёты">
           <AntMenu.Item key="/report1">Отчет 1</AntMenu.Item>

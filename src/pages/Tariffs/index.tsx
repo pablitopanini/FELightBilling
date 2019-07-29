@@ -15,7 +15,7 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
   React.useEffect(() => {
     props.dispatch(actions.getList())
     setHandlers(getTableHandlers(props, actions, pageName))
-  }, [])
+  }, [props.dispatch])
 
   return (
     <React.Fragment>

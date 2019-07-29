@@ -4,11 +4,21 @@ export interface IAction<T> extends AnyAction {
   payload?: T
 }
 
-export type Filter<T> = { [P in keyof T]: string }
+export type Filter<T> = { [P in keyof T]?: string }
 
 export type Sort<T> = {
   fieldName: keyof T
   order: 'desc' | 'asc'
+}
+
+export interface IPageStore<T> {
+  list: T[]
+  page: number
+  pageSize: number
+  total: number
+  item?: T
+  filter?: Filter<T>
+  sort?: Sort<T>
 }
 
 export interface IHouse {
@@ -19,18 +29,25 @@ export interface IHouse {
   comment: String
 }
 
-export interface IHousesStore {
-  list: IHouse[]
-  page: number
-  pageSize: number
-  total: number
-  item?: IHouse
-  filter?: Filter<IHouse>
-  sort?: Sort<IHouse>
+export interface ITariff {
+  id: String
+  name: String
+  comment: String
+  isPeriodic: boolean
+  type: number
+  typeString: String
+  inputRate: number
+  outputRate: number
+  cost: number
 }
+
+export interface IHousesStore extends IPageStore<IHouse> {}
+
+export interface ITariffsStore extends IPageStore<ITariff> {}
 
 export interface IStore {
   houses: IHousesStore
+  tariffs: ITariffsStore
 }
 
 export type Payload = any

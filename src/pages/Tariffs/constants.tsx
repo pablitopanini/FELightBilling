@@ -1,17 +1,17 @@
 import * as React from 'react'
 import { Icon, Popconfirm } from 'antd'
-import { getColumnSearchProps } from '../../utils/helpers'
-import { IHousesStore, IHouse } from '../../interfaces'
+import { getColumnSearchProps } from '../..//utils/helpers'
+import { ITariffsStore, ITariff } from '../../interfaces'
 
-export const pageName = 'houses'
-export const apiUrl = '/api/House/House'
-export const actionPrefix: String = 'HOUSES'
-export interface IPageStore extends IHousesStore {}
-export interface IItem extends IHouse {}
+export const pageName = 'tariffs'
+export const apiUrl = '/api/Tariff/Tariff'
+export const actionPrefix: String = 'TARIFFS'
+export interface IPageStore extends ITariffsStore {}
+export interface IItem extends ITariff {}
 
 export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
-    title: 'Улица',
+    title: 'Улица1',
     dataIndex: 'address',
     width: '25%',
     sorter: true,
