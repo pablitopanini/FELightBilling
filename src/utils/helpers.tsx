@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { transform } from 'lodash'
 import { Input, Button, Icon } from 'antd'
+import { PaginationProps } from 'antd/lib/pagination'
 
 export const getActions = <T, A>(actionNames: A) =>
   transform<any, any>(actionNames, (result: any, value, key) => {
@@ -99,18 +100,31 @@ export const getTableHandlers = (
     }
   },
 
-  handleTableChange: (_: any, __: any, { field: fieldName, order }: any) => {
-    props.dispatch(
-      actions.setSort({
-        fieldName,
-        order:
-          order === 'ascend' ? 'asc' : order === 'descend' ? 'desc' : undefined
-      })
-    )
+  handleTableChange: (
+    pagination: PaginationProps,
+    __: any,
+    { field: fieldName, order }: any
+  ) => {
+    pagination.current !== props.page &&
+      props.dispatch(actions.setPage(pagination.current))
+
+    fieldName &&
+      order &&
+      props.dispatch(
+        actions.setSort({
+          fieldName,
+          order:
+            order === 'ascend'
+              ? 'asc'
+              : order === 'descend'
+              ? 'desc'
+              : undefined
+        })
+      )
   },
 
   handlePaginationChange: (page: number) => {
-    page !== props.page && props.dispatch(actions.setPage(page))
+    // page !== props.page && props.dispatch(actions.setPage(page))
   },
 
   handlePaginationShowSizeChange: (current: number, size: number) => {

@@ -50,7 +50,8 @@ render(
             <Layout.Content
               style={{
                 height: 'calc(100vh - 133px)',
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                borderBottom: '1px solid #e8e8e8'
               }}
             >
               <Routes />

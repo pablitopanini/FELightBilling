@@ -21,6 +21,10 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
     }
   }, [])
 
+  React.useEffect(() => {
+    setHandlers(getTableHandlers(props, actions, pageName))
+  }, [props.page])
+
   return (
     <React.Fragment>
       <Button
@@ -41,7 +45,8 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
           onChange: handlers && handlers.handlePaginationChange,
           onShowSizeChange: handlers && handlers.handlePaginationShowSizeChange,
           pageSize: props.pageSize,
-          total: props.total
+          total: props.total,
+          current: props.page
         }}
         onRow={handlers && handlers.handleRowDoubleClick}
         onChange={handlers && handlers.handleTableChange}
