@@ -1,23 +1,15 @@
 import * as React from 'react'
-import { Modal, Form, Input, Button } from 'antd'
+import { Modal, Form, Input, Button, Select } from 'antd'
 import { withRouter, RouteComponentProps } from 'react-router'
 import { connect, DispatchProp } from 'react-redux'
-import { IStore } from 'src/interfaces'
+import { IStore, ISubnet } from '../../interfaces'
 import { pageName, IPageStore } from './constants'
 import { FormProps } from 'antd/lib/form'
 import { actions } from './store'
-import { get, reduce } from 'lodash'
+import { get, reduce, map } from 'lodash'
+import { requiredRules } from '../../utils/helpers'
 
 export type IProps = RouteComponentProps & FormProps & DispatchProp & IPageStore
-
-const requiredRules = {
-  rules: [
-    {
-      required: true,
-      message: 'Обязательно к заполнению!'
-    }
-  ]
-}
 
 const formItemLayout = {
   labelCol: {
@@ -30,40 +22,43 @@ const formItemLayout = {
   }
 }
 
-class EditModal extends React.Component<IProps, any> {
-  state = {
-    visible: false
-  }
+function EditModal(props: IProps) {
+  const [visible, setVisible] = React.useState<boolean>(false)
 
-  componentDidMount() {
-    if (get(this, 'props.match.params.id') !== 'new') {
-      this.props.dispatch(actions.getItem(get(this, 'props.match.params.id')))
+  React.useEffect(() => {
+    props.dispatch(actions.getSubnets())
+    return () => {
+      props.dispatch(actions.clearSubnets())
+    }
+  }, [])
+
+  React.useEffect(() => {
+    if (get(props, 'match.params.id') !== 'new') {
+      props.dispatch(actions.getItem(get(props, 'match.params.id')))
     } else {
-      this.setState({ visible: true })
+      setVisible(true)
     }
-  }
 
-  componentWillUnmount() {
-    this.props.dispatch(actions.clearItem())
-  }
+    return () => {
+      props.dispatch(actions.clearItem())
+    }
+  }, [])
 
-  componentDidUpdate(prevProps: IProps) {
-    if (this.props.item && this.props.item !== prevProps.item) {
-      if (get(this, 'props.match.params.id') === 'new') {
-        this.props.history.push(`/${pageName}/${this.props.item.id}`)
+  React.useEffect(() => {
+    if (props.item)
+      if (get(props, 'match.params.id') === 'new') {
+        props.history.push(`/${pageName}/${props.item.id}`)
       } else {
-        this.initFieldsValues()
-        this.setState({ visible: true })
+        initFieldsValues()
+        setVisible(true)
       }
-    }
-  }
+  }, [props.item])
 
-  initFieldsValues = () => {
-    this.props.item &&
-      this.props.form &&
-      this.props.form!.setFields(
+  function initFieldsValues() {
+    props.form &&
+      props.form!.setFields(
         reduce(
-          this.props.item,
+          props.item,
           (result, value, key) => {
             result[key] = { value }
             return result
@@ -73,16 +68,16 @@ class EditModal extends React.Component<IProps, any> {
       )
   }
 
-  handleCancel = () => {
-    this.props.history.push(`/${pageName}`)
+  function handleCancel() {
+    props.history.push(`/${pageName}`)
   }
 
-  handleOk = () => {
-    this.props.form!.validateFieldsAndScroll((err, values) => {
+  function handleOk() {
+    props.form!.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.dispatch(
+        props.dispatch(
           actions.saveItem({
-            id: get(this, 'props.item.id', undefined),
+            id: get(props, 'item.id', undefined),
             ...values
           })
         )
@@ -90,51 +85,65 @@ class EditModal extends React.Component<IProps, any> {
     })
   }
 
-  render() {
-    const { form } = this.props
-    const { getFieldDecorator } = form!
+  const { form } = props
+  const { getFieldDecorator } = form!
 
-    return (
-      <Modal
-        title="Редактирование"
-        visible={this.state.visible}
-        footer={[
-          <Button
-            key="submit"
-            type="primary"
-            icon="save"
-            onClick={this.handleOk}
-          />,
-          <Button key="back" onClick={this.handleCancel}>
-            Закрыть
-          </Button>
-        ]}
-        closable={false}
-      >
-        <Form {...formItemLayout}>
-          <Form.Item label="Улица">
-            {getFieldDecorator('address', {
-              ...requiredRules
-            })(<Input />)}
-          </Form.Item>
+  return (
+    <Modal
+      title="Редактирование"
+      visible={visible}
+      footer={[
+        <Button key="submit" type="primary" icon="save" onClick={handleOk} />,
+        <Button key="back" onClick={handleCancel}>
+          Закрыть
+        </Button>
+      ]}
+      closable={false}
+    >
+      <Form {...formItemLayout}>
+        <Form.Item label="Улица">
+          {getFieldDecorator('address', {
+            ...requiredRules
+          })(<Input />)}
+        </Form.Item>
 
-          <Form.Item label="Номер">
-            {getFieldDecorator('number', {
-              ...requiredRules
-            })(<Input />)}
-          </Form.Item>
+        <Form.Item label="Номер">
+          {getFieldDecorator('number', {
+            ...requiredRules
+          })(<Input />)}
+        </Form.Item>
 
-          <Form.Item label="Корпус">
-            {getFieldDecorator('additionalNumber')(<Input />)}
-          </Form.Item>
+        <Form.Item label="Корпус">
+          {getFieldDecorator('additionalNumber')(<Input />)}
+        </Form.Item>
 
-          <Form.Item label="Комментарий">
-            {getFieldDecorator('comment')(<Input.TextArea />)}
-          </Form.Item>
-        </Form>
-      </Modal>
-    )
-  }
+        <Form.Item label="Подъезд">
+          {getFieldDecorator('porch')(<Input />)}
+        </Form.Item>
+
+        <Form.Item label="Подсеть">
+          {getFieldDecorator('subnet')(
+            <Select
+              showSearch
+              onSearch={(value: string) => {
+                props.dispatch(actions.getSubnets(value))
+              }}
+            >
+              {map(get(props, 'subnets'), (subnet: ISubnet) => (
+                <Select.Option value={subnet.id}>
+                  {`${subnet.address}/${subnet.mask}`}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item label="Комментарий">
+          {getFieldDecorator('comment')(<Input.TextArea />)}
+        </Form.Item>
+      </Form>
+    </Modal>
+  )
 }
 
 const EditModalForm = Form.create({ name: `${pageName}_edit_form` })(EditModal)

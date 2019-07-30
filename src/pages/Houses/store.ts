@@ -19,29 +19,31 @@ export interface IActions<T> {
   removeItemSucceed: T
   setFilter: T
   setSort: T
+  reset: T
+  getSubnets: T
+  getSubnetsSucceed: T
+  clearSubnets: T
 }
 
 export const actionNames: IActions<string> = {
   getList: `${actionPrefix}.GET_LIST`,
   getListSucceed: `${actionPrefix}.GET_LIST_SUCCEED`,
-
   setPage: `${actionPrefix}.SET_PAGE`,
   setPageSize: `${actionPrefix}.SET_PAGE_SIZE`,
-
   saveItem: `${actionPrefix}.SAVE_ITEM`,
   saveItemSucceed: `${actionPrefix}.SAVE_ITEM_SUCCEED`,
-
   getItem: `${actionPrefix}.GET_ITEM`,
   getItemSucceed: `${actionPrefix}.GET_ITEM_SUCCEED`,
   getItemFailed: `${actionPrefix}.GET_ITEM_FAILED`,
-
   clearItem: `${actionPrefix}.CLEAR_ITEM`,
-
   removeItem: `${actionPrefix}.REMOVE_ITEM`,
   removeItemSucceed: `${actionPrefix}.REMOVE_ITEM_SUCCEED`,
-
   setFilter: `${actionPrefix}.SET_FILTER`,
-  setSort: `${actionPrefix}.SET_SORT`
+  setSort: `${actionPrefix}.SET_SORT`,
+  reset: `${actionPrefix}.RESET`,
+  getSubnets: `${actionPrefix}.GET_SUBNETS`,
+  getSubnetsSucceed: `${actionPrefix}.GET_SUBNETS_SUCCEED`,
+  clearSubnets: `${actionPrefix}.CLEAR_SUBNETS`
 }
 
 export const actions = getActions<
@@ -130,6 +132,21 @@ export const reducer: (
       return {
         ...state,
         sort: action.payload
+      }
+
+    case actionNames.reset:
+      return defaultState
+
+    case actionNames.getSubnetsSucceed:
+      return {
+        ...state,
+        subnets: action.payload
+      }
+
+    case actionNames.clearSubnets:
+      return {
+        ...state,
+        subnets: undefined
       }
 
     default:

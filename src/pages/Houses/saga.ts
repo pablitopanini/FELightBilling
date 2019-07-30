@@ -2,7 +2,7 @@ import { call, put, takeEvery, select, takeLatest } from 'redux-saga/effects'
 import { actionNames } from './store'
 import { actionNames as globalActionNames } from '../../reducer'
 import rest from './rest'
-import { IAction, Payload, IStore } from 'src/interfaces'
+import { IAction, Payload, IStore } from '../../interfaces'
 import { pageName } from './constants'
 
 export default {
@@ -12,6 +12,7 @@ export default {
     yield takeEvery(actionNames.saveItemSucceed, getList)
     yield takeEvery(actionNames.getItem, getItem)
     yield takeEvery(actionNames.removeItem, removeItem)
+    yield takeEvery(actionNames.getSubnets, getSubnets)
 
     yield takeLatest(actionNames.removeItemSucceed, getList)
     yield takeLatest(actionNames.setPage, getList)
@@ -79,6 +80,25 @@ function* removeItem(action: IAction<Payload>) {
 
     yield put({
       type: actionNames.removeItemSucceed,
+      payload: res.data
+    })
+  } catch (err) {
+    yield put({ type: globalActionNames.showError, payload: err })
+  }
+}
+
+function* getSubnets(action: IAction<Payload>) {
+  try {
+    const res = yield call(rest.getSubnets, {
+      skip: 0,
+      limit: 30,
+      filter: {
+        composite: action.payload
+      }
+    })
+
+    yield put({
+      type: actionNames.getSubnetsSucceed,
       payload: res.data
     })
   } catch (err) {

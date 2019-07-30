@@ -13,23 +13,30 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: 'Улица',
     dataIndex: 'address',
-    width: '25%',
+    width: '30%',
     sorter: true,
     ...getColumnSearchProps('address', handleSearch)
   },
   {
     title: 'Дом',
     dataIndex: 'number',
-    width: '15%',
+    width: '10%',
     sorter: true,
     ...getColumnSearchProps('number', handleSearch)
   },
   {
     title: 'Корпус',
     dataIndex: 'additionalNumber',
-    width: '15%',
+    width: '10%',
     sorter: true,
     ...getColumnSearchProps('additionalNumber', handleSearch)
+  },
+  {
+    title: 'Подъезд',
+    dataIndex: 'porch',
+    width: '10%',
+    sorter: true,
+    ...getColumnSearchProps('porch', handleSearch)
   },
   {
     title: 'Комментарий',

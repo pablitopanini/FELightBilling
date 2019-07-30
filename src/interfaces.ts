@@ -4,7 +4,11 @@ export interface IAction<T> extends AnyAction {
   payload?: T
 }
 
-export type Filter<T> = { [P in keyof T]?: string | number | boolean }
+export type Filter<T> =
+  | {
+      composite?: string
+    }
+  | { [P in keyof T]?: string | number | boolean }
 
 export type Sort<T> = {
   fieldName: keyof T
@@ -17,6 +21,13 @@ export interface IPageStore<T> {
   pageSize: number
   total: number
   item?: T
+  filter?: Filter<T>
+  sort?: Sort<T>
+}
+
+export interface IGetLIstParams<T> {
+  skip: number
+  limit: number
   filter?: Filter<T>
   sort?: Sort<T>
 }
@@ -41,7 +52,16 @@ export interface ITariff {
   cost: number
 }
 
-export interface IHousesStore extends IPageStore<IHouse> {}
+export interface ISubnet {
+  id: number
+  address: string
+  mask: number
+  gateway: string
+}
+
+export interface IHousesStore extends IPageStore<IHouse> {
+  subnets?: ISubnet[]
+}
 
 export interface ITariffsStore extends IPageStore<ITariff> {}
 

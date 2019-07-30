@@ -2,7 +2,7 @@ import { call, put, takeEvery, select, takeLatest } from 'redux-saga/effects'
 import { actionNames } from './store'
 import { actionNames as globalActionNames } from '../../reducer'
 import rest from './rest'
-import { IAction, Payload, IStore } from 'src/interfaces'
+import { IAction, Payload, IStore } from '../../interfaces'
 import { pageName } from './constants'
 
 export default {

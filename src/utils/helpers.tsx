@@ -117,3 +117,12 @@ export const getTableHandlers = (
     props.dispatch(actions.setPageSize(size))
   }
 })
+
+export const requiredRules = {
+  rules: [
+    {
+      required: true,
+      message: 'Обязательно к заполнению!'
+    }
+  ]
+}

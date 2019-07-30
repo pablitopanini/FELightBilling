@@ -7,17 +7,9 @@ import { pageName, IPageStore } from './constants'
 import { FormProps } from 'antd/lib/form'
 import { actions } from './store'
 import { get, reduce } from 'lodash'
+import { requiredRules } from '../../utils/helpers'
 
 export type IProps = RouteComponentProps & FormProps & DispatchProp & IPageStore
-
-const requiredRules = {
-  rules: [
-    {
-      required: true,
-      message: 'Обязательно к заполнению!'
-    }
-  ]
-}
 
 const formItemLayout = {
   labelCol: {
