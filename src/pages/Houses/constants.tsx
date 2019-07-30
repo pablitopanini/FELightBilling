@@ -41,10 +41,11 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: 'Комментарий',
     dataIndex: 'comment',
-    width: '40%',
+    width: '35%',
     ...getColumnSearchProps('comment', handleSearch)
   },
   {
+    width: '5%',
     render: (text: any, record: any) => {
       return (
         <span>

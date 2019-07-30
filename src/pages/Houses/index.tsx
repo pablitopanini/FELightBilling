@@ -35,6 +35,7 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
 
       <Table
         bordered
+        scroll={{ x: true, y: 'calc(100vh - 315px)' }}
         dataSource={props.list}
         columns={getColumns({
           handleSearch: handlers && handlers.handleSearch,
