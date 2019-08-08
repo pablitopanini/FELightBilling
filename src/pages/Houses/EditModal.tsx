@@ -2,11 +2,11 @@ import * as React from 'react'
 import { Modal, Form, Input, Button, Select } from 'antd'
 import { withRouter, RouteComponentProps } from 'react-router'
 import { connect, DispatchProp } from 'react-redux'
-import { IStore, ISubnet } from '../../interfaces'
+import { IStore } from '../../interfaces'
 import { pageName, IPageStore } from './constants'
 import { FormProps } from 'antd/lib/form'
 import { actions } from './store'
-import { get, reduce, map } from 'lodash'
+import { get, map } from 'lodash'
 import { requiredRules } from '../../utils/helpers'
 
 export type IProps = RouteComponentProps & FormProps & DispatchProp & IPageStore
@@ -25,6 +25,7 @@ const formItemLayout = {
 function EditModal(props: IProps) {
   const [visible, setVisible] = React.useState<boolean>(false)
 
+  // get links
   React.useEffect(() => {
     props.dispatch(actions.getSubnets())
     return () => {
@@ -32,41 +33,24 @@ function EditModal(props: IProps) {
     }
   }, [])
 
+  // get item if not new
   React.useEffect(() => {
     if (get(props, 'match.params.id') !== 'new') {
       props.dispatch(actions.getItem(get(props, 'match.params.id')))
-    } else {
-      setVisible(true)
     }
+    setVisible(true)
 
     return () => {
       props.dispatch(actions.clearItem())
     }
   }, [])
 
+  // new => id in url
   React.useEffect(() => {
-    if (props.item)
-      if (get(props, 'match.params.id') === 'new') {
-        props.history.push(`/${pageName}/${props.item.id}`)
-      } else {
-        initFieldsValues()
-        setVisible(true)
-      }
+    if (props.item && get(props, 'match.params.id') === 'new') {
+      props.history.push(`/${pageName}/${props.item.id}`)
+    }
   }, [props.item])
-
-  function initFieldsValues() {
-    props.form &&
-      props.form!.setFields(
-        reduce(
-          props.item,
-          (result, value, key) => {
-            result[key] = { value }
-            return result
-          },
-          {}
-        )
-      )
-  }
 
   function handleCancel() {
     props.history.push(`/${pageName}`)
@@ -78,7 +62,8 @@ function EditModal(props: IProps) {
         props.dispatch(
           actions.saveItem({
             id: get(props, 'item.id', undefined),
-            ...values
+            ...values,
+            subnet: { id: values.subnet.key }
           })
         )
       }
@@ -87,7 +72,6 @@ function EditModal(props: IProps) {
 
   const { form } = props
   const { getFieldDecorator } = form!
-
   return (
     <Modal
       title="Редактирование"
@@ -128,10 +112,11 @@ function EditModal(props: IProps) {
               onSearch={(value: string) => {
                 props.dispatch(actions.getSubnets(value))
               }}
+              labelInValue
             >
-              {map(get(props, 'subnets'), (subnet: ISubnet) => (
-                <Select.Option value={subnet.id}>
-                  {`${subnet.address}/${subnet.mask}`}
+              {map(get(props, 'subnets'), (subnet: any) => (
+                <Select.Option key={subnet.id} value={subnet.id}>
+                  {`${subnet.net}/${subnet.mask}`}
                 </Select.Option>
               ))}
             </Select>
@@ -146,7 +131,39 @@ function EditModal(props: IProps) {
   )
 }
 
-const EditModalForm = Form.create({ name: `${pageName}_edit_form` })(EditModal)
+const EditModalForm = Form.create({
+  name: `${pageName}_edit_form`,
+  mapPropsToFields(props: any) {
+    return {
+      address: Form.createFormField({
+        value: get(props, 'item.address', undefined)
+      }),
+      number: Form.createFormField({
+        value: get(props, 'item.number', undefined)
+      }),
+      additionalNumber: Form.createFormField({
+        value: get(props, 'item.additionalNumber', undefined)
+      }),
+      porch: Form.createFormField({
+        value: get(props, 'item.porch', undefined)
+      }),
+      subnet: Form.createFormField({
+        value: {
+          key: get(props, 'item.subnet.id', undefined),
+          label: get(props, 'item.subnet.net')
+            ? `${get(props, 'item.subnet.net')}/${get(
+                props,
+                'item.subnet.mask'
+              )}`
+            : ''
+        }
+      }),
+      comment: Form.createFormField({
+        value: get(props, 'item.comment', undefined)
+      })
+    }
+  }
+})(EditModal)
 
 export default withRouter(
   connect<any, any, any, any>((state: IStore) => ({ ...state[pageName] }))(
