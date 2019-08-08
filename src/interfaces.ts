@@ -54,7 +54,7 @@ export interface ITariff {
 
 export interface ISubnet {
   id: number
-  address: string
+  net: string
   mask: number
   gateway: string
 }

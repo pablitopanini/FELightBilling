@@ -93,7 +93,7 @@ function* getSubnets(action: IAction<Payload>) {
       skip: 0,
       limit: 30,
       filter: {
-        composite: action.payload
+        net: `${action.payload}`
       }
     })
 
