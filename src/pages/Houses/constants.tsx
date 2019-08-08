@@ -39,9 +39,14 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
     ...getColumnSearchProps('porch', handleSearch)
   },
   {
+    title: 'Подсеть',
+    dataIndex: 'subnetString',
+    width: '10%'
+  },
+  {
     title: 'Комментарий',
     dataIndex: 'comment',
-    width: '35%',
+    width: '25%',
     ...getColumnSearchProps('comment', handleSearch)
   },
   {
