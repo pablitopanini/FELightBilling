@@ -112,6 +112,7 @@ function EditModal(props: IProps) {
               onSearch={(value: string) => {
                 props.dispatch(actions.getSubnets(value))
               }}
+              filterOption={() => true}
               labelInValue
             >
               {map(get(props, 'subnets'), (subnet: any) => (
