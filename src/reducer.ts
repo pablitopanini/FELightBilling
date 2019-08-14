@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { reducer as houses } from './pages/Houses/store'
 import { reducer as tariffs } from './pages/Tariffs/store'
 import { reducer as services } from './pages/Services/store'
+import { reducer as clients } from './pages/Clients/store'
 import { IGlobalStore, IAction, Payload } from './interfaces'
 import { getActions } from './utils/helpers'
 import { notification } from 'antd'
@@ -50,7 +51,8 @@ const reducers = {
   global,
   houses,
   tariffs,
-  services
+  services,
+  clients
 }
 
 export default combineReducers(reducers)

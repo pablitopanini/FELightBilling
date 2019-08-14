@@ -59,16 +59,30 @@ export interface ISubnet {
   gateway: string
 }
 
+export interface IClient {
+  id: number
+  name: string
+  surname: string
+  middleName: string
+  login: string
+  balance: number
+  status: string
+  isActive: boolean
+}
+
 export interface IHousesStore extends IPageStore<IHouse> {
   subnets?: ISubnet[]
 }
 
 export interface ITariffsStore extends IPageStore<ITariff> {}
 
+export interface IClientsStore extends IPageStore<IClient> {}
+
 export interface IStore {
   houses: IHousesStore
   tariffs: ITariffsStore
   services: ITariffsStore
+  clients: IClientsStore
 }
 
 export type Payload = any
