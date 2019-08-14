@@ -63,7 +63,9 @@ function EditModal(props: IProps) {
           actions.saveItem({
             id: get(props, 'item.id', undefined),
             ...values,
-            subnet: { id: values.subnet.key }
+            subnet: get(values, 'subnet.key')
+              ? { id: values.subnet.key }
+              : undefined
           })
         )
       }
@@ -114,6 +116,7 @@ function EditModal(props: IProps) {
               }}
               filterOption={() => true}
               labelInValue
+              allowClear
             >
               {map(get(props, 'subnets'), (subnet: any) => (
                 <Select.Option key={subnet.id} value={subnet.id}>

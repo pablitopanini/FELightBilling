@@ -140,3 +140,18 @@ export const requiredRules = {
     }
   ]
 }
+
+export const title = (value: string) => (
+  <div
+    style={{
+      wordWrap: 'break-word',
+      wordBreak: 'break-all'
+    }}
+  >
+    {value}
+  </div>
+)
+
+export const render = (text: string) => (
+  <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>
+)

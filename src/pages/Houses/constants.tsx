@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Icon, Popconfirm } from 'antd'
-import { getColumnSearchProps } from '../../utils/helpers'
+import { getColumnSearchProps, title, render } from '../../utils/helpers'
 import { IHousesStore, IHouse } from '../../interfaces'
 
 export const pageName = 'houses'
@@ -11,42 +11,48 @@ export interface IItem extends IHouse {}
 
 export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
-    title: 'Улица',
+    title: title('Улица'),
     dataIndex: 'address',
-    width: '30%',
+    width: '20%',
     sorter: true,
+    render,
     ...getColumnSearchProps('address', handleSearch)
   },
   {
-    title: 'Дом',
+    title: title('Дом'),
     dataIndex: 'number',
     width: '10%',
     sorter: true,
+    render,
     ...getColumnSearchProps('number', handleSearch)
   },
   {
-    title: 'Корпус',
+    title: title('Корпус'),
     dataIndex: 'additionalNumber',
     width: '10%',
     sorter: true,
+    render,
     ...getColumnSearchProps('additionalNumber', handleSearch)
   },
   {
-    title: 'Подъезд',
+    title: title('Подъезд'),
     dataIndex: 'porch',
     width: '10%',
     sorter: true,
+    render,
     ...getColumnSearchProps('porch', handleSearch)
   },
   {
-    title: 'Подсеть',
+    title: title('Подсеть'),
     dataIndex: 'subnetString',
-    width: '10%'
+    width: '15%',
+    render
   },
   {
-    title: 'Комментарий',
+    title: title('Комментарий'),
     dataIndex: 'comment',
-    width: '25%',
+    width: '30%',
+    render,
     ...getColumnSearchProps('comment', handleSearch)
   },
   {
