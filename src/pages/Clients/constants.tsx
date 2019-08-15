@@ -12,20 +12,16 @@ export interface IItem extends IClient {}
 export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: title('ФИО'),
-    dataIndex: 'surname',
+    dataIndex: 'fullName',
     width: '20%',
     sorter: true,
-    render: (text: string, record: IItem) => (
-      <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
-        {`${record.surname} ${record.name} ${record.middleName}`}
-      </div>
-    ),
-    ...getColumnSearchProps('surname', handleSearch)
+    render,
+    ...getColumnSearchProps('fullName', handleSearch)
   },
   {
     title: title('Адрес'),
-    dataIndex: 'CompositeAddress',
-    width: '15%',
+    dataIndex: 'compositeAddress',
+    width: '20%',
     render
   },
   {
@@ -39,20 +35,20 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: title('Баланс'),
     dataIndex: 'balance',
-    width: '15%',
+    width: '10%',
     render
   },
   {
     title: title('Статус'),
     dataIndex: 'status',
-    width: '30%',
+    width: '10%',
     render,
     ...getColumnSearchProps('status', handleSearch)
   },
   {
     title: title('Активность'),
     dataIndex: 'isActive',
-    width: '5%',
+    width: '10%',
     render: (_: any, record: any) => <Checkbox checked={record.isActive} />,
     sorter: true
   },
