@@ -63,9 +63,7 @@ function EditModal(props: IProps) {
           actions.saveItem({
             id: get(props, 'item.id', undefined),
             ...values,
-            subnet: get(values, 'subnet.key')
-              ? { id: values.subnet.key }
-              : undefined
+            subnetId: get(values, 'subnet.key', undefined)
           })
         )
       }

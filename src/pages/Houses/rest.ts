@@ -9,5 +9,5 @@ export default {
   saveItem: (item: any) => http.patch(apiUrl, item),
   removeItem: (item: any) => http.delete(apiUrl, { data: { id: item.id } }),
   getSubnets: (params: IGetLIstParams<ISubnet>) =>
-    http.post('/api/Subnet/Free', params)
+    http.post('/api/Network/FreeSubnets', params)
 }

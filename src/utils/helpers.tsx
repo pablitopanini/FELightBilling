@@ -108,6 +108,7 @@ export const getTableHandlers = (
     pagination.current !== props.page &&
       props.dispatch(actions.setPage(pagination.current))
 
+    //debugger
     fieldName &&
       order &&
       props.dispatch(
