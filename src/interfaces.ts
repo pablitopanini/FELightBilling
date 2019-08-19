@@ -33,20 +33,21 @@ export interface IGetLIstParams<T> {
 }
 
 export interface IHouse {
-  id: String
-  address: String
-  number: String
-  additionalNumber: String
-  comment: String
+  id: string
+  address: string
+  number: string
+  additionalNumber: string
+  comment: string
+  porch: string
 }
 
 export interface ITariff {
-  id: String
-  name: String
-  comment: String
+  id: string
+  name: string
+  comment: string
   isPeriodic: boolean
   type: number
-  typeString: String
+  typeString: string
   inputRate: number
   outputRate: number
   cost: number
@@ -70,13 +71,23 @@ export interface IClient {
   isActive: boolean
 }
 
+export interface IGreyAddress {
+  id: number
+  address: string
+  compositeAddress: string
+}
+
 export interface IHousesStore extends IPageStore<IHouse> {
   subnets?: ISubnet[]
 }
 
 export interface ITariffsStore extends IPageStore<ITariff> {}
 
-export interface IClientsStore extends IPageStore<IClient> {}
+export interface IClientsStore extends IPageStore<IClient> {
+  houses?: IHouse[]
+  greyAddress?: IGreyAddress
+  tariffs?: ITariff[]
+}
 
 export interface IStore {
   houses: IHousesStore

@@ -20,9 +20,11 @@ export interface IActions<T> {
   setFilter: T
   setSort: T
   reset: T
-  getSubnets: T
-  getSubnetsSucceed: T
-  clearSubnets: T
+  getHouses: T
+  getHousesSucceed: T
+  getTariffs: T
+  getTariffsSucceed: T
+  clearLinks: T
 }
 
 export const actionNames: IActions<string> = {
@@ -41,9 +43,11 @@ export const actionNames: IActions<string> = {
   setFilter: `${actionPrefix}.SET_FILTER`,
   setSort: `${actionPrefix}.SET_SORT`,
   reset: `${actionPrefix}.RESET`,
-  getSubnets: `${actionPrefix}.GET_SUBNETS`,
-  getSubnetsSucceed: `${actionPrefix}.GET_SUBNETS_SUCCEED`,
-  clearSubnets: `${actionPrefix}.CLEAR_SUBNETS`
+  getHouses: `${actionPrefix}.GET_HOUSES`,
+  getHousesSucceed: `${actionPrefix}.GET_HOUSES_SUCCEED`,
+  getTariffs: `${actionPrefix}.GET_TARIFFS`,
+  getTariffsSucceed: `${actionPrefix}.GET_TARIFFS_SUCCEED`,
+  clearLinks: `${actionPrefix}.CLEAR_LINKS`
 }
 
 export const actions = getActions<
@@ -137,16 +141,24 @@ export const reducer: (
     case actionNames.reset:
       return defaultState
 
-    case actionNames.getSubnetsSucceed:
+    case actionNames.getHousesSucceed:
       return {
         ...state,
-        subnets: action.payload
+        houses: action.payload
       }
 
-    case actionNames.clearSubnets:
+    case actionNames.getTariffsSucceed:
       return {
         ...state,
-        subnets: undefined
+        tariffs: action.payload
+      }
+
+    case actionNames.clearLinks:
+      return {
+        ...state,
+        houses: undefined,
+        greyAddress: undefined,
+        tariffs: undefined
       }
 
     default:

@@ -12,7 +12,8 @@ export default {
     yield takeEvery(actionNames.saveItemSucceed, getList)
     yield takeEvery(actionNames.getItem, getItem)
     yield takeEvery(actionNames.removeItem, removeItem)
-    yield takeEvery(actionNames.getSubnets, getSubnets)
+    yield takeEvery(actionNames.getHouses, getHouses)
+    yield takeEvery(actionNames.getTariffs, getTariffs)
 
     yield takeLatest(actionNames.removeItemSucceed, getList)
     yield takeLatest(actionNames.setPage, getList)
@@ -87,19 +88,38 @@ function* removeItem(action: IAction<Payload>) {
   }
 }
 
-function* getSubnets(action: IAction<Payload>) {
+function* getHouses(action: IAction<Payload>) {
   try {
-    const res = yield call(rest.getSubnets, {
+    const res = yield call(rest.getHouses, {
       skip: 0,
       limit: 30,
       filter: {
-        net: `${action.payload}`
+        composite: action.payload
       }
     })
 
     yield put({
-      type: actionNames.getSubnetsSucceed,
-      payload: res.data
+      type: actionNames.getHousesSucceed,
+      payload: res.data.data
+    })
+  } catch (err) {
+    yield put({ type: globalActionNames.showError, payload: err })
+  }
+}
+
+function* getTariffs(action: IAction<Payload>) {
+  try {
+    const res = yield call(rest.getTariffs, {
+      skip: 0,
+      limit: 30,
+      filter: {
+        name: action.payload
+      }
+    })
+
+    yield put({
+      type: actionNames.getTariffsSucceed,
+      payload: res.data.data
     })
   } catch (err) {
     yield put({ type: globalActionNames.showError, payload: err })
