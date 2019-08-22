@@ -25,6 +25,8 @@ export interface IActions<T> {
   getTariffs: T
   getTariffsSucceed: T
   clearLinks: T
+  addPayment: T
+  addPaymentSucceed: T
 }
 
 export const actionNames: IActions<string> = {
@@ -47,7 +49,9 @@ export const actionNames: IActions<string> = {
   getHousesSucceed: `${actionPrefix}.GET_HOUSES_SUCCEED`,
   getTariffs: `${actionPrefix}.GET_TARIFFS`,
   getTariffsSucceed: `${actionPrefix}.GET_TARIFFS_SUCCEED`,
-  clearLinks: `${actionPrefix}.CLEAR_LINKS`
+  clearLinks: `${actionPrefix}.CLEAR_LINKS`,
+  addPayment: `${actionPrefix}.ADD_PAYMENT`,
+  addPaymentSucceed: `${actionPrefix}.ADD_PAYMENT_SUCCEED`
 }
 
 export const actions = getActions<
@@ -160,6 +164,14 @@ export const reducer: (
         greyAddress: undefined,
         tariffs: undefined
       }
+
+    case actionNames.addPaymentSucceed:
+      notification.success({
+        placement: 'bottomRight',
+        message: 'Успех',
+        description: 'Платеж успешно внесён'
+      })
+      return state
 
     default:
       return state || defaultState

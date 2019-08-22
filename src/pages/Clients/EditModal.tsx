@@ -1,5 +1,14 @@
 import * as React from 'react'
-import { Modal, Form, Input, Button, Select, Checkbox } from 'antd'
+import {
+  Modal,
+  Form,
+  Input,
+  Button,
+  Select,
+  Checkbox,
+  InputNumber,
+  Icon
+} from 'antd'
 import { withRouter, RouteComponentProps } from 'react-router'
 import { connect, DispatchProp } from 'react-redux'
 import { IStore, ITariff, IHouse, IGreyAddress } from '../../interfaces'
@@ -7,7 +16,7 @@ import { pageName, IPageStore } from './constants'
 import { FormProps, FormComponentProps } from 'antd/lib/form'
 import { actions } from './store'
 import { get, map } from 'lodash'
-import { requiredRules } from '../../utils/helpers'
+import { requiredRules, generatePassword } from '../../utils/helpers'
 import rest from './rest'
 
 export type IProps = RouteComponentProps & FormProps & DispatchProp & IPageStore
@@ -15,11 +24,11 @@ export type IProps = RouteComponentProps & FormProps & DispatchProp & IPageStore
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 10 }
+    sm: { span: 8 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 14 }
+    sm: { span: 16 }
   }
 }
 
@@ -59,6 +68,21 @@ function EditModal(props: IProps) {
       getGreyAddresses(get(props, 'item.houseId'))
     }
   }, [props.item])
+
+  React.useEffect(() => {
+    if (
+      get(props, 'match.params.id') === 'new' &&
+      !props.form!.getFieldValue('password')
+    ) {
+      genPass()
+    }
+  }, [props.form])
+
+  function genPass() {
+    props.form!.setFieldsValue({
+      password: generatePassword()
+    })
+  }
 
   function getGreyAddresses(houseId: number) {
     rest.getGreyAddress(houseId).then((res: any) => {
@@ -102,56 +126,23 @@ function EditModal(props: IProps) {
         </Button>
       ]}
       closable={false}
+      width={640}
     >
       <Form {...formItemLayout}>
-        <Form.Item label="Фамилия">
-          {getFieldDecorator('surname', { ...requiredRules })(<Input />)}
+        <Form.Item label="ФИО">
+          {getFieldDecorator('fullName', { ...requiredRules })(<Input />)}
         </Form.Item>
 
-        <Form.Item label="Имя">
-          {getFieldDecorator('name', { ...requiredRules })(<Input />)}
+        <Form.Item label="Телефон">
+          {getFieldDecorator('phoneNumber')(<Input />)}
         </Form.Item>
 
-        <Form.Item label="Отчество">
-          {getFieldDecorator('middleName', { ...requiredRules })(<Input />)}
-        </Form.Item>
-
-        <Form.Item label="Логин">
-          {getFieldDecorator('login', { ...requiredRules })(<Input />)}
-        </Form.Item>
-
-        <Form.Item label="Пароль">
-          {getFieldDecorator('password', { ...requiredRules })(<Input />)}
-        </Form.Item>
-
-        <Form.Item label="IP адрес оборудования">
-          {getFieldDecorator('hwIpAddress', { ...requiredRules })(<Input />)}
-        </Form.Item>
-
-        <Form.Item label="Порт оборудования">
-          {getFieldDecorator('hwPort', { ...requiredRules })(<Input />)}
-        </Form.Item>
-
-        <Form.Item label="Баланс">
-          {getFieldDecorator('balance')(<Input disabled />)}
-        </Form.Item>
-
-        <Form.Item label="Кредит">
-          {getFieldDecorator('credit')(<Input disabled />)}
-        </Form.Item>
-
-        <Form.Item label="Статус">
-          {getFieldDecorator('status')(<Input />)}
-        </Form.Item>
-
-        <Form.Item label="Активность">
-          {getFieldDecorator('isActive', {
-            valuePropName: 'checked'
-          })(<Checkbox />)}
+        <Form.Item label="Паспорт">
+          {getFieldDecorator('passportData')(<Input />)}
         </Form.Item>
 
         <Form.Item label="Дом">
-          {getFieldDecorator('house', { ...requiredRules })(
+          {getFieldDecorator('house')(
             <Select
               showSearch
               onSearch={(value: string) => {
@@ -179,7 +170,7 @@ function EditModal(props: IProps) {
         </Form.Item>
 
         <Form.Item label="Серый IP">
-          {getFieldDecorator('greyAddress', { ...requiredRules })(
+          {getFieldDecorator('greyAddress')(
             <Select
               showSearch
               onSearch={(value: string) => {
@@ -219,6 +210,51 @@ function EditModal(props: IProps) {
           )}
         </Form.Item>
 
+        <Form.Item label="Логин">
+          {getFieldDecorator('login', { ...requiredRules })(<Input />)}
+        </Form.Item>
+
+        <Form.Item label="Пароль">
+          {getFieldDecorator('password', { ...requiredRules })(
+            <Input
+              addonAfter={
+                <Icon
+                  type="reload"
+                  onClick={() => {
+                    genPass()
+                  }}
+                />
+              }
+            />
+          )}
+        </Form.Item>
+
+        <Form.Item label="IP адрес оборудования">
+          {getFieldDecorator('hwIpAddress')(<Input />)}
+        </Form.Item>
+
+        <Form.Item label="Порт оборудования">
+          {getFieldDecorator('hwPort')(<Input />)}
+        </Form.Item>
+
+        <Form.Item label="Баланс">
+          {getFieldDecorator('balance')(<InputNumber disabled />)}
+        </Form.Item>
+
+        <Form.Item label="Кредит">
+          {getFieldDecorator('credit')(<InputNumber />)}
+        </Form.Item>
+
+        <Form.Item label="Статус">
+          {getFieldDecorator('status')(<Input disabled />)}
+        </Form.Item>
+
+        <Form.Item label="Активность">
+          {getFieldDecorator('isActive', {
+            valuePropName: 'checked'
+          })(<Checkbox />)}
+        </Form.Item>
+
         <Form.Item label="Комментарий">
           {getFieldDecorator('comment')(<Input.TextArea />)}
         </Form.Item>
@@ -240,14 +276,8 @@ function getForm(mapPropsToFields: any) {
 }
 
 const EditModalForm = getForm((props: any) => ({
-  name: Form.createFormField({
-    value: get(props, 'item.name', undefined)
-  }),
-  surname: Form.createFormField({
-    value: get(props, 'item.surname', undefined)
-  }),
-  middleName: Form.createFormField({
-    value: get(props, 'item.middleName', undefined)
+  fullName: Form.createFormField({
+    value: get(props, 'item.fullName', undefined)
   }),
   login: Form.createFormField({
     value: get(props, 'item.login', undefined)
@@ -272,6 +302,12 @@ const EditModalForm = getForm((props: any) => ({
   }),
   isActive: Form.createFormField({
     value: get(props, 'item.isActive', undefined)
+  }),
+  passportData: Form.createFormField({
+    value: get(props, 'item.passportData', undefined)
+  }),
+  phoneNumber: Form.createFormField({
+    value: get(props, 'item.phoneNumber', undefined)
   }),
   house: Form.createFormField({
     value: get(props, 'item.house.address')

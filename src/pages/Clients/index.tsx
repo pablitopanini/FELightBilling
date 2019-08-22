@@ -8,9 +8,14 @@ import { getColumns, pageName, IPageStore } from './constants'
 import EditModal from './EditModal'
 import { get } from 'lodash'
 import { getTableHandlers, getPaginationOptions } from '../../utils/helpers'
+import AddPaymentModal from './AddPaymentModal'
 
 function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
   const [handlers, setHandlers] = React.useState<any>({})
+  const [showAddPaymentModal, setShowAddPaymentModal] = React.useState<boolean>(
+    false
+  )
+  const [row, setRow] = React.useState<any>({})
 
   React.useEffect(() => {
     props.dispatch(actions.getList())
@@ -24,6 +29,11 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
   React.useEffect(() => {
     setHandlers(getTableHandlers(props, actions, pageName))
   }, [props.page])
+
+  function handleAddPayment(row: any) {
+    setRow(row)
+    setShowAddPaymentModal(true)
+  }
 
   return (
     <React.Fragment>
@@ -39,7 +49,8 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
         dataSource={props.list}
         columns={getColumns({
           handleSearch: handlers && handlers.handleSearch,
-          handleRemove: handlers && handlers.handleRemove
+          handleRemove: handlers && handlers.handleRemove,
+          handleAddPayment
         })}
         pagination={{
           ...getPaginationOptions({}),
@@ -54,6 +65,23 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
       />
 
       {get(props, 'match.params.id') && <EditModal />}
+      {showAddPaymentModal && (
+        <AddPaymentModal
+          client={row}
+          handleOk={(sum: number) => {
+            props.dispatch(
+              actions.addPayment({
+                ClientId: row.id,
+                Amount: sum
+              })
+            )
+            setShowAddPaymentModal(false)
+          }}
+          handleCancel={() => {
+            setShowAddPaymentModal(false)
+          }}
+        />
+      )}
     </React.Fragment>
   )
 }

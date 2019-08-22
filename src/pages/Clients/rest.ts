@@ -13,5 +13,6 @@ export default {
   getGreyAddress: (id: any) =>
     http.get(`/api/Network/FreeAddressesByHouseId?houseId=${id}`),
   getTariffs: (params: IGetLIstParams<ITariff>) =>
-    http.post('/api/Tariff/Tariff', params)
+    http.post('/api/Tariff/Tariff', params),
+  addPayment: (params: any) => http.post('/api/Payment/Add', params)
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Icon, Popconfirm, Checkbox } from 'antd'
+import { Icon, Popconfirm, Checkbox, Divider } from 'antd'
 import { getColumnSearchProps, title, render } from '../../utils/helpers'
 import { IHousesStore, IHouse, IClientsStore, IClient } from '../../interfaces'
 
@@ -9,7 +9,18 @@ export const actionPrefix: String = 'CLIENTS'
 export interface IPageStore extends IClientsStore {}
 export interface IItem extends IClient {}
 
-export const getColumns = ({ handleRemove, handleSearch }: any) => [
+export const getColumns = ({
+  handleRemove,
+  handleSearch,
+  handleAddPayment
+}: any) => [
+  {
+    title: title('ID'),
+    dataIndex: 'id',
+    width: '10%',
+    render,
+    ...getColumnSearchProps('id', handleSearch)
+  },
   {
     title: title('ФИО'),
     dataIndex: 'fullName',
@@ -60,6 +71,13 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
           <Popconfirm title="Удалить?" onConfirm={() => handleRemove(record)}>
             <Icon type="delete" />
           </Popconfirm>
+          <Divider type="vertical" />
+          <Icon
+            type="dollar"
+            onClick={() => {
+              handleAddPayment(record)
+            }}
+          />
         </span>
       )
     }

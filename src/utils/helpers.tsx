@@ -156,3 +156,13 @@ export const title = (value: string) => (
 export const render = (text: string) => (
   <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>
 )
+
+export const generatePassword = () => {
+  const length = 6,
+    charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let retVal = ''
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n))
+  }
+  return retVal
+}

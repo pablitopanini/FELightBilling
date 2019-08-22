@@ -14,12 +14,14 @@ export default {
     yield takeEvery(actionNames.removeItem, removeItem)
     yield takeEvery(actionNames.getHouses, getHouses)
     yield takeEvery(actionNames.getTariffs, getTariffs)
+    yield takeEvery(actionNames.addPayment, addPayment)
 
     yield takeLatest(actionNames.removeItemSucceed, getList)
     yield takeLatest(actionNames.setPage, getList)
     yield takeLatest(actionNames.setPageSize, getList)
     yield takeLatest(actionNames.setFilter, getList)
     yield takeLatest(actionNames.setSort, getList)
+    yield takeLatest(actionNames.addPaymentSucceed, getList)
   }
 }
 
@@ -119,6 +121,19 @@ function* getTariffs(action: IAction<Payload>) {
 
     yield put({
       type: actionNames.getTariffsSucceed,
+      payload: res.data.data
+    })
+  } catch (err) {
+    yield put({ type: globalActionNames.showError, payload: err })
+  }
+}
+
+function* addPayment(action: IAction<Payload>) {
+  try {
+    const res = yield call(rest.addPayment, action.payload)
+
+    yield put({
+      type: actionNames.addPaymentSucceed,
       payload: res.data.data
     })
   } catch (err) {
