@@ -7,7 +7,8 @@ import {
   Select,
   Checkbox,
   InputNumber,
-  Icon
+  Icon,
+  DatePicker
 } from 'antd'
 import { withRouter, RouteComponentProps } from 'react-router'
 import { connect, DispatchProp } from 'react-redux'
@@ -18,6 +19,7 @@ import { actions } from './store'
 import { get, map } from 'lodash'
 import { requiredRules, generatePassword } from '../../utils/helpers'
 import rest from './rest'
+import * as moment from 'moment'
 
 export type IProps = RouteComponentProps & FormProps & DispatchProp & IPageStore
 
@@ -106,7 +108,9 @@ function EditModal(props: IProps) {
             tariffIds: map(
               get(values, 'tariffs', []),
               (tariff: any) => tariff.key
-            )
+            ),
+            creditValidFrom: values.creditDate[0],
+            creditValidTo: values.creditDate[1]
           })
         )
       }
@@ -115,6 +119,7 @@ function EditModal(props: IProps) {
 
   const { form } = props
   const { getFieldDecorator } = form!
+
   return (
     <Modal
       title="Редактирование"
@@ -128,137 +133,163 @@ function EditModal(props: IProps) {
       closable={false}
       width={640}
     >
-      <Form {...formItemLayout}>
-        <Form.Item label="ФИО">
-          {getFieldDecorator('fullName', { ...requiredRules })(<Input />)}
-        </Form.Item>
+      <div
+        onKeyPress={(e: any) => {
+          if (!e) e = window.event
+          const keyCode = e.keyCode || e.which
+          if (keyCode == '13') {
+            handleOk()
+            return false
+          }
+          return true
+        }}
+      >
+        <Form {...formItemLayout}>
+          <Form.Item label="ФИО">
+            {getFieldDecorator('fullName', { ...requiredRules })(<Input />)}
+          </Form.Item>
 
-        <Form.Item label="Телефон">
-          {getFieldDecorator('phoneNumber')(<Input />)}
-        </Form.Item>
+          <Form.Item label="Телефон">
+            {getFieldDecorator('phoneNumber')(<Input />)}
+          </Form.Item>
 
-        <Form.Item label="Паспорт">
-          {getFieldDecorator('passportData')(<Input />)}
-        </Form.Item>
+          <Form.Item label="Паспорт">
+            {getFieldDecorator('passportData')(<Input />)}
+          </Form.Item>
 
-        <Form.Item label="Дом">
-          {getFieldDecorator('house')(
-            <Select
-              showSearch
-              onSearch={(value: string) => {
-                props.dispatch(actions.getHouses(value))
-              }}
-              filterOption={() => true}
-              labelInValue
-              allowClear
-              onChange={(value: any) => {
-                if (value && value.key) getGreyAddresses(value.key)
-                else setGreyAddresses([])
-              }}
-            >
-              {map(get(props, 'houses'), (house: IHouse) => (
-                <Select.Option key={house.id} value={house.id}>
-                  {`${(house.address && house.address + ` `) ||
-                    ''}${(house.number && house.number + ` `) ||
-                    ''}${(house.additionalNumber &&
-                    house.additionalNumber + ` `) ||
-                    ''}${house.porch || ''}`}
-                </Select.Option>
-              ))}
-            </Select>
-          )}
-        </Form.Item>
+          <Form.Item label="Дом">
+            {getFieldDecorator('house')(
+              <Select
+                showSearch
+                onSearch={(value: string) => {
+                  props.dispatch(actions.getHouses(value))
+                }}
+                filterOption={() => true}
+                labelInValue
+                allowClear
+                onChange={(value: any) => {
+                  if (value && value.key) getGreyAddresses(value.key)
+                  else setGreyAddresses([])
+                }}
+              >
+                {map(get(props, 'houses'), (house: IHouse) => (
+                  <Select.Option key={house.id} value={house.id}>
+                    {`${(house.address && house.address + ` `) ||
+                      ''}${(house.number && house.number + ` `) ||
+                      ''}${(house.additionalNumber &&
+                      house.additionalNumber + ` `) ||
+                      ''}${house.porch || ''}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
 
-        <Form.Item label="Серый IP">
-          {getFieldDecorator('greyAddress')(
-            <Select
-              showSearch
-              onSearch={(value: string) => {
-                // TODO
-              }}
-              filterOption={() => true}
-              labelInValue
-              allowClear
-            >
-              {map(greyAddresses, (item: IGreyAddress) => (
-                <Select.Option key={item.id} value={item.id}>
-                  {`${item.address}`}
-                </Select.Option>
-              ))}
-            </Select>
-          )}
-        </Form.Item>
+          <Form.Item label="Квартира">
+            {getFieldDecorator('apartmentNumber')(<Input />)}
+          </Form.Item>
 
-        <Form.Item label="Тариф">
-          {getFieldDecorator('tariffs')(
-            <Select
-              showSearch
-              onSearch={(value: string) => {
-                props.dispatch(actions.getTariffs(value))
-              }}
-              filterOption={() => true}
-              labelInValue
-              allowClear
-              mode="multiple"
-            >
-              {map(get(props, 'tariffs'), (item: ITariff) => (
-                <Select.Option key={item.id} value={item.id}>
-                  {`${item.name}`}
-                </Select.Option>
-              ))}
-            </Select>
-          )}
-        </Form.Item>
+          <Form.Item label="Серый IP">
+            {getFieldDecorator('greyAddress')(
+              <Select
+                showSearch
+                onSearch={(value: string) => {
+                  // TODO
+                }}
+                filterOption={() => true}
+                labelInValue
+                allowClear
+              >
+                {map(greyAddresses, (item: IGreyAddress) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {`${item.address}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
 
-        <Form.Item label="Логин">
-          {getFieldDecorator('login', { ...requiredRules })(<Input />)}
-        </Form.Item>
+          <Form.Item label="Тариф">
+            {getFieldDecorator('tariffs')(
+              <Select
+                showSearch
+                onSearch={(value: string) => {
+                  props.dispatch(actions.getTariffs(value))
+                }}
+                filterOption={() => true}
+                labelInValue
+                allowClear
+                mode="multiple"
+              >
+                {map(get(props, 'tariffs'), (item: ITariff) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {`${item.name}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
 
-        <Form.Item label="Пароль">
-          {getFieldDecorator('password', { ...requiredRules })(
-            <Input
-              addonAfter={
-                <Icon
-                  type="reload"
-                  onClick={() => {
-                    genPass()
-                  }}
-                />
-              }
-            />
-          )}
-        </Form.Item>
+          <Form.Item label="Логин">
+            {getFieldDecorator('login', { ...requiredRules })(<Input />)}
+          </Form.Item>
 
-        <Form.Item label="IP адрес оборудования">
-          {getFieldDecorator('hwIpAddress')(<Input />)}
-        </Form.Item>
+          <Form.Item label="Пароль">
+            {getFieldDecorator('password', { ...requiredRules })(
+              <Input
+                addonAfter={
+                  <Icon
+                    type="reload"
+                    onClick={() => {
+                      genPass()
+                    }}
+                  />
+                }
+              />
+            )}
+          </Form.Item>
 
-        <Form.Item label="Порт оборудования">
-          {getFieldDecorator('hwPort')(<Input />)}
-        </Form.Item>
+          <Form.Item label="IP адрес оборудования">
+            {getFieldDecorator('hwIpAddress')(<Input />)}
+          </Form.Item>
 
-        <Form.Item label="Баланс">
-          {getFieldDecorator('balance')(<InputNumber disabled />)}
-        </Form.Item>
+          <Form.Item label="Порт оборудования">
+            {getFieldDecorator('hwPort')(<Input />)}
+          </Form.Item>
 
-        <Form.Item label="Кредит">
-          {getFieldDecorator('credit')(<InputNumber />)}
-        </Form.Item>
+          <Form.Item label="Баланс">
+            {getFieldDecorator('balance')(<InputNumber disabled />)}
+          </Form.Item>
 
-        <Form.Item label="Статус">
-          {getFieldDecorator('status')(<Input disabled />)}
-        </Form.Item>
+          <Form.Item label="Кредит">
+            {getFieldDecorator('credit')(<InputNumber />)}
+          </Form.Item>
 
-        <Form.Item label="Активность">
-          {getFieldDecorator('isActive', {
-            valuePropName: 'checked'
-          })(<Checkbox />)}
-        </Form.Item>
+          <Form.Item label="Статус">
+            {getFieldDecorator('status')(<Input disabled />)}
+          </Form.Item>
 
-        <Form.Item label="Комментарий">
-          {getFieldDecorator('comment')(<Input.TextArea />)}
-        </Form.Item>
-      </Form>
+          <Form.Item label="Активность">
+            {getFieldDecorator('isActive', {
+              valuePropName: 'checked'
+            })(<Checkbox />)}
+          </Form.Item>
+
+          <Form.Item label="Комментарий">
+            {getFieldDecorator('comment')(<Input.TextArea />)}
+          </Form.Item>
+
+          <Form.Item label="Кредит">
+            {getFieldDecorator('creditDate', {
+              rules: [
+                {
+                  type: 'array'
+                }
+              ]
+            })(<DatePicker.RangePicker format="DD-MM-YYYY" />)}
+          </Form.Item>
+        </Form>
+      </div>
     </Modal>
   )
 }
@@ -278,6 +309,9 @@ function getForm(mapPropsToFields: any) {
 const EditModalForm = getForm((props: any) => ({
   fullName: Form.createFormField({
     value: get(props, 'item.fullName', undefined)
+  }),
+  apartmentNumber: Form.createFormField({
+    value: get(props, 'item.apartmentNumber', undefined)
   }),
   login: Form.createFormField({
     value: get(props, 'item.login', undefined)
@@ -335,6 +369,12 @@ const EditModalForm = getForm((props: any) => ({
   }),
   comment: Form.createFormField({
     value: get(props, 'item.comment', undefined)
+  }),
+  creditDate: Form.createFormField({
+    value: [
+      moment(get(props, 'item.creditValidFrom', undefined)),
+      moment(get(props, 'item.creditValidTo', undefined))
+    ]
   })
 }))
 
