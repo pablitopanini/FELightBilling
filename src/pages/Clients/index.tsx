@@ -68,11 +68,12 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
       {showAddPaymentModal && (
         <AddPaymentModal
           client={row}
-          handleOk={(sum: number) => {
+          handleOk={(sum: number, comment?: string) => {
             props.dispatch(
               actions.addPayment({
                 ClientId: row.id,
-                Amount: sum
+                Amount: sum,
+                Comment: comment
               })
             )
             setShowAddPaymentModal(false)

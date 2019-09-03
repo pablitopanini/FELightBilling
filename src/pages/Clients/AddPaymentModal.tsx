@@ -20,7 +20,7 @@ export default function AddPaymentModal(props: Props) {
           type="primary"
           icon="save"
           onClick={() => {
-            props.handleOk(sum)
+            props.handleOk(sum, comment)
           }}
         />,
         <Button key="back" onClick={props.handleCancel}>
@@ -30,43 +30,55 @@ export default function AddPaymentModal(props: Props) {
       closable={false}
       width={480}
     >
-      <Form.Item
-        label="Сумма"
-        labelCol={{
-          xs: { span: 24 },
-          sm: { span: 10 }
-        }}
-        wrapperCol={{
-          xs: { span: 24 },
-          sm: { span: 14 }
+      <div
+        onKeyPress={(e: any) => {
+          if (!e) e = window.event
+          const keyCode = e.keyCode || e.which
+          if (keyCode == '13') {
+            sum && props.handleOk(sum, comment)
+            return false
+          }
+          return true
         }}
       >
-        <InputNumber
-          value={sum}
-          onChange={value => {
-            setSum(value as number)
+        <Form.Item
+          label="Сумма"
+          labelCol={{
+            xs: { span: 24 },
+            sm: { span: 10 }
           }}
-        />
-      </Form.Item>
+          wrapperCol={{
+            xs: { span: 24 },
+            sm: { span: 14 }
+          }}
+        >
+          <InputNumber
+            value={sum}
+            onChange={value => {
+              setSum(value as number)
+            }}
+          />
+        </Form.Item>
 
-      <Form.Item
-        label="Комментарий"
-        labelCol={{
-          xs: { span: 24 },
-          sm: { span: 10 }
-        }}
-        wrapperCol={{
-          xs: { span: 24 },
-          sm: { span: 14 }
-        }}
-      >
-        <Input.TextArea
-          value={comment}
-          onChange={(value: any) => {
-            setComment(value)
+        <Form.Item
+          label="Комментарий"
+          labelCol={{
+            xs: { span: 24 },
+            sm: { span: 10 }
           }}
-        />
-      </Form.Item>
+          wrapperCol={{
+            xs: { span: 24 },
+            sm: { span: 14 }
+          }}
+        >
+          <Input.TextArea
+            value={comment}
+            onChange={(e: any) => {
+              setComment(e.target.value)
+            }}
+          />
+        </Form.Item>
+      </div>
     </Modal>
   )
 }
