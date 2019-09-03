@@ -2,6 +2,7 @@ import * as React from 'react'
 import { transform } from 'lodash'
 import { Input, Button, Icon } from 'antd'
 import { PaginationProps } from 'antd/lib/pagination'
+import * as moment from 'moment'
 
 export const getActions = <T, A>(actionNames: A) =>
   transform<any, any>(actionNames, (result: any, value, key) => {
@@ -155,6 +156,12 @@ export const title = (value: string) => (
 
 export const render = (text: string) => (
   <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>
+)
+
+export const renderDate = (text: string) => (
+  <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+    {moment(text).format('DD-MM-YYYY HH:mm')}
+  </div>
 )
 
 export const generatePassword = () => {

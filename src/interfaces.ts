@@ -94,6 +94,7 @@ export interface IStore {
   tariffs: ITariffsStore
   services: ITariffsStore
   clients: IClientsStore
+  payments: IClientsStore
 }
 
 export type Payload = any
