@@ -309,10 +309,6 @@ function EditModal(props: IProps) {
             {getFieldDecorator('credit')(<InputNumber />)}
           </Form.Item>
 
-          <Form.Item label="Статус">
-            {getFieldDecorator('status')(<Input disabled />)}
-          </Form.Item>
-
           <Form.Item label="Активность">
             {getFieldDecorator('isActive', {
               valuePropName: 'checked'
