@@ -39,6 +39,9 @@ function EditModal(props: IProps) {
   const [greyAddresses, setGreyAddresses] = React.useState<Array<IGreyAddress>>(
     []
   )
+  const [whiteAddresses, setWhiteAddresses] = React.useState<
+    Array<IGreyAddress>
+  >([])
 
   // get links
   React.useEffect(() => {
@@ -69,6 +72,9 @@ function EditModal(props: IProps) {
     if (get(props, 'item.houseId')) {
       getGreyAddresses(get(props, 'item.houseId'))
     }
+    if (get(props, 'item.greyAddress')) {
+      getWhiteAddresses()
+    }
   }, [props.item])
 
   React.useEffect(() => {
@@ -92,6 +98,12 @@ function EditModal(props: IProps) {
     })
   }
 
+  function getWhiteAddresses() {
+    rest.getWhiteAddress().then((res: any) => {
+      setWhiteAddresses(get(res, 'data', []))
+    })
+  }
+
   function handleCancel() {
     props.history.push(`/${pageName}`)
   }
@@ -105,6 +117,7 @@ function EditModal(props: IProps) {
             ...values,
             houseId: get(values, 'house.key', undefined),
             greyAddressId: get(values, 'greyAddress.key', undefined),
+            whiteAddressId: get(values, 'whiteAddress.key', undefined),
             tariffIds: map(
               get(values, 'tariffs', []),
               (tariff: any) => tariff.key
@@ -169,7 +182,10 @@ function EditModal(props: IProps) {
                 allowClear
                 onChange={(value: any) => {
                   if (value && value.key) getGreyAddresses(value.key)
-                  else setGreyAddresses([])
+                  else {
+                    setGreyAddresses([])
+                    setWhiteAddresses([])
+                  }
                 }}
               >
                 {map(get(props, 'houses'), (house: IHouse) => (
@@ -199,8 +215,32 @@ function EditModal(props: IProps) {
                 filterOption={() => true}
                 labelInValue
                 allowClear
+                onChange={(value: any) => {
+                  if (value && value.key) getWhiteAddresses()
+                  else setWhiteAddresses([])
+                }}
               >
                 {map(greyAddresses, (item: IGreyAddress) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {`${item.address}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
+
+          <Form.Item label="Белый IP">
+            {getFieldDecorator('whiteAddress')(
+              <Select
+                showSearch
+                onSearch={(value: string) => {
+                  // TODO
+                }}
+                filterOption={() => true}
+                labelInValue
+                allowClear
+              >
+                {map(whiteAddresses, (item: IGreyAddress) => (
                   <Select.Option key={item.id} value={item.id}>
                     {`${item.address}`}
                   </Select.Option>
@@ -300,7 +340,16 @@ function getForm(mapPropsToFields: any) {
     mapPropsToFields,
     onValuesChange: (props: any, changedValues: Object, allValues) => {
       if (changedValues.hasOwnProperty('house')) {
-        props.form.setFieldsValue({ greyAddress: undefined })
+        props.form.setFieldsValue({
+          greyAddress: undefined,
+          whiteAddress: undefined
+        })
+      }
+
+      if (changedValues.hasOwnProperty('greyAddress')) {
+        props.form.setFieldsValue({
+          whiteAddress: undefined
+        })
       }
     }
   })(EditModal)
@@ -359,6 +408,14 @@ const EditModalForm = getForm((props: any) => ({
         }
       : undefined
   }),
+  whiteAddress: Form.createFormField({
+    value: get(props, 'item.whiteAddress.id')
+      ? {
+          key: get(props, 'item.whiteAddress.id', undefined),
+          label: `${get(props, 'item.whiteAddress.address')}`
+        }
+      : undefined
+  }),
   tariffs: Form.createFormField({
     value: get(props, 'item.tariffs')
       ? map(get(props, 'item.tariffs', []), (tariff: ITariff) => ({
@@ -372,8 +429,12 @@ const EditModalForm = getForm((props: any) => ({
   }),
   creditDate: Form.createFormField({
     value: [
-      moment(get(props, 'item.creditValidFrom', undefined)),
-      moment(get(props, 'item.creditValidTo', undefined))
+      get(props, 'item.creditValidFrom', undefined)
+        ? moment(get(props, 'item.creditValidFrom', undefined))
+        : undefined,
+      get(props, 'item.creditValidTo', undefined)
+        ? moment(get(props, 'item.creditValidTo', undefined))
+        : undefined
     ]
   })
 }))

@@ -22,6 +22,14 @@ export const getColumns = ({
     ...getColumnSearchProps('id', handleSearch)
   },
   {
+    title: title('Логин'),
+    dataIndex: 'login',
+    width: '10%',
+    sorter: true,
+    render,
+    ...getColumnSearchProps('login', handleSearch)
+  },
+  {
     title: title('ФИО'),
     dataIndex: 'fullName',
     width: '20%',
@@ -34,14 +42,6 @@ export const getColumns = ({
     dataIndex: 'compositeAddress',
     width: '20%',
     render
-  },
-  {
-    title: title('Логин'),
-    dataIndex: 'login',
-    width: '10%',
-    sorter: true,
-    render,
-    ...getColumnSearchProps('login', handleSearch)
   },
   {
     title: title('Баланс'),
