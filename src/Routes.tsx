@@ -26,7 +26,7 @@ const NoMatch = ({ location }: RouteComponentProps) => {
 class Routes extends React.Component<RouteComponentProps> {
   public render() {
     if (this.props.location.pathname === '/') {
-      return <Redirect to="/houses" />
+      return <Redirect to="/clients" />
     }
 
     return (

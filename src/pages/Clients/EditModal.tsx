@@ -205,6 +205,10 @@ function EditModal(props: IProps) {
             {getFieldDecorator('apartmentNumber')(<Input />)}
           </Form.Item>
 
+          <Form.Item label="MAC адрес">
+            {getFieldDecorator('macAddress')(<Input />)}
+          </Form.Item>
+
           <Form.Item label="Серый IP">
             {getFieldDecorator('greyAddress')(
               <Select
@@ -436,6 +440,9 @@ const EditModalForm = getForm((props: any) => ({
         ? moment(get(props, 'item.creditValidTo', undefined))
         : undefined
     ]
+  }),
+  macAddress: Form.createFormField({
+    value: get(props, 'item.macAddress', undefined)
   })
 }))
 
