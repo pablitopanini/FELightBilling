@@ -1,0 +1,45 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": ".",
+  "main": "src/index.tsx",
+  "scripts": {
+    "start": "cross-env NODE_ENV=DEVELOPMENT PROXY_TARGET=http://109.94.189.110:5000 webpack-dev-server --color --progress --config webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --progress"
+  },
+  "dependencies": {
+    "antd": "^3.20.5",
+    "axios": "^0.19.0",
+    "lodash": "^4.17.15",
+    "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.1",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.136",
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.5",
+    "@types/react-redux": "^7.1.1",
+    "@types/react-router-dom": "^4.3.4",
+    "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^5.2.0",
+    "css-loader": "^3.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "redux-devtools-extension": "^2.13.8",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.37.0",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}
