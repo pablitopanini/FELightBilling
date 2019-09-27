@@ -9,9 +9,9 @@ export const actionPrefix: String = 'HOUSES'
 export interface IPageStore extends IHousesStore {}
 export interface IItem extends IHouse {}
 
-export const getColumns = ({ handleRemove, handleSearch }: any) => [
+export const getColumns = ({ handleRemove, handleSearch, sortedInfo }: any) => [
   {
-    title: title('Улица'),
+    title: 'Улица',
     dataIndex: 'address',
     width: '20%',
     sorter: true,
@@ -19,7 +19,7 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
     ...getColumnSearchProps('address', handleSearch)
   },
   {
-    title: title('Дом'),
+    title: 'Дом',
     dataIndex: 'number',
     width: '10%',
     sorter: true,
@@ -27,7 +27,7 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
     ...getColumnSearchProps('number', handleSearch)
   },
   {
-    title: title('Корпус'),
+    title: 'Корпус',
     dataIndex: 'additionalNumber',
     width: '10%',
     sorter: true,
@@ -35,7 +35,7 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
     ...getColumnSearchProps('additionalNumber', handleSearch)
   },
   {
-    title: title('Подъезд'),
+    title: 'Подъезд',
     dataIndex: 'porch',
     width: '10%',
     sorter: true,
@@ -43,13 +43,13 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
     ...getColumnSearchProps('porch', handleSearch)
   },
   {
-    title: title('Подсеть'),
+    title: 'Подсеть',
     dataIndex: 'subnetString',
     width: '15%',
     render
   },
   {
-    title: title('Комментарий'),
+    title: 'Комментарий',
     dataIndex: 'comment',
     width: '30%',
     render,

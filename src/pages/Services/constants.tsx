@@ -13,14 +13,14 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: 'Название',
     dataIndex: 'name',
-    width: '25%',
+    width: '30%',
     sorter: true,
     ...getColumnSearchProps('name', handleSearch)
   },
   {
     title: 'Периодический',
     dataIndex: 'isPeriodic',
-    width: '5%',
+    width: '15%',
     render: (_: any, record: ITariff) => (
       <Checkbox checked={record.isPeriodic} />
     )
@@ -28,17 +28,18 @@ export const getColumns = ({ handleRemove, handleSearch }: any) => [
   {
     title: 'Стоимость',
     dataIndex: 'cost',
-    width: '10%',
+    width: '15%',
     sorter: true,
     ...getColumnSearchProps('cost', handleSearch)
   },
   {
     title: 'Комментарий',
     dataIndex: 'comment',
-    width: '50%',
+    width: '30%',
     ...getColumnSearchProps('comment', handleSearch)
   },
   {
+    width: '10%',
     render: (text: any, record: any) => {
       return (
         <span>

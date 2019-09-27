@@ -78,7 +78,8 @@ export const getColumnSearchProps = (dataIndex: any, handleSearch: any) => {
 export const getTableHandlers = (
   props: any,
   actions: any,
-  pageName: string
+  pageName: string,
+  setSortedInfo?: any
 ) => ({
   handleSearch: (dataIndex: string, value: any, confirm: any) => {
     confirm()
@@ -101,24 +102,21 @@ export const getTableHandlers = (
     }
   },
 
-  handleTableChange: (
-    pagination: PaginationProps,
-    __: any,
-    { field: fieldName, order }: any
-  ) => {
+  handleTableChange: (pagination: PaginationProps, __: any, sorter: any) => {
     pagination.current !== props.page &&
       props.dispatch(actions.setPage(pagination.current))
 
-    //debugger
-    fieldName &&
-      order &&
+    setSortedInfo && setSortedInfo(sorter)
+
+    sorter.field &&
+      sorter.order &&
       props.dispatch(
         actions.setSort({
-          fieldName,
+          fieldName: sorter.field,
           order:
-            order === 'ascend'
+            sorter.order === 'ascend'
               ? 'asc'
-              : order === 'descend'
+              : sorter.order === 'descend'
               ? 'desc'
               : undefined
         })

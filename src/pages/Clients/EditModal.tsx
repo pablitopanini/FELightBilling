@@ -396,7 +396,12 @@ const EditModalForm = getForm((props: any) => ({
     value: get(props, 'item.house.address')
       ? {
           key: get(props, 'item.house.id', undefined),
-          label: `${get(props, 'item.house.address')}`
+          label: `${(props.item.house.address &&
+            props.item.house.address + ` `) ||
+            ''}${(props.item.house.number && props.item.house.number + ` `) ||
+            ''}${(props.item.house.additionalNumber &&
+            props.item.house.additionalNumber + ` `) ||
+            ''}${props.item.house.porch || ''}`
         }
       : undefined
   }),

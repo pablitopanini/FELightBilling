@@ -11,10 +11,11 @@ import { getTableHandlers, getPaginationOptions } from '../../utils/helpers'
 
 function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
   const [handlers, setHandlers] = React.useState<any>({})
+  const [sortedInfo, setSortedInfo] = React.useState<any>({})
 
   React.useEffect(() => {
     props.dispatch(actions.getList())
-    setHandlers(getTableHandlers(props, actions, pageName))
+    setHandlers(getTableHandlers(props, actions, pageName, setSortedInfo))
 
     return () => {
       props.dispatch(actions.reset())
@@ -22,7 +23,7 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
   }, [])
 
   React.useEffect(() => {
-    setHandlers(getTableHandlers(props, actions, pageName))
+    setHandlers(getTableHandlers(props, actions, pageName, setSortedInfo))
   }, [props.page])
 
   return (
@@ -39,7 +40,8 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
         dataSource={props.list}
         columns={getColumns({
           handleSearch: handlers && handlers.handleSearch,
-          handleRemove: handlers && handlers.handleRemove
+          handleRemove: handlers && handlers.handleRemove,
+          sortedInfo
         })}
         pagination={{
           ...getPaginationOptions({}),

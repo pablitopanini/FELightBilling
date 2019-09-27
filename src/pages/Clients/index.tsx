@@ -16,10 +16,11 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
     false
   )
   const [row, setRow] = React.useState<any>({})
+  const [sortedInfo, setSortedInfo] = React.useState<any>({})
 
   React.useEffect(() => {
     props.dispatch(actions.getList())
-    setHandlers(getTableHandlers(props, actions, pageName))
+    setHandlers(getTableHandlers(props, actions, pageName, setSortedInfo))
 
     return () => {
       props.dispatch(actions.reset())
@@ -27,7 +28,7 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
   }, [])
 
   React.useEffect(() => {
-    setHandlers(getTableHandlers(props, actions, pageName))
+    setHandlers(getTableHandlers(props, actions, pageName, setSortedInfo))
   }, [props.page])
 
   function handleAddPayment(row: any) {
@@ -50,7 +51,8 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
         columns={getColumns({
           handleSearch: handlers && handlers.handleSearch,
           handleRemove: handlers && handlers.handleRemove,
-          handleAddPayment
+          handleAddPayment,
+          sortedInfo
         })}
         pagination={{
           ...getPaginationOptions({}),

@@ -15,51 +15,51 @@ export const getColumns = ({
   handleAddPayment
 }: any) => [
   {
-    title: title('ID'),
+    title: 'ID',
     dataIndex: 'id',
-    width: '10%',
+    width: '7%',
     render,
     ...getColumnSearchProps('id', handleSearch)
   },
   {
-    title: title('Логин'),
+    title: 'Логин',
     dataIndex: 'login',
-    width: '10%',
+    width: '13%',
     sorter: true,
     render,
     ...getColumnSearchProps('login', handleSearch)
   },
   {
-    title: title('ФИО'),
+    title: 'ФИО',
     dataIndex: 'fullName',
-    width: '20%',
+    width: '25%',
     sorter: true,
     render,
     ...getColumnSearchProps('fullName', handleSearch)
   },
   {
-    title: title('Адрес'),
+    title: 'Адрес',
     dataIndex: 'compositeAddress',
     width: '20%',
     render
   },
   {
-    title: title('Баланс'),
+    title: 'Баланс',
     dataIndex: 'balance',
     width: '10%',
     render
   },
   {
-    title: title('Статус'),
+    title: 'Статус',
     dataIndex: 'status',
     width: '10%',
     render,
     ...getColumnSearchProps('status', handleSearch)
   },
   {
-    title: title('Активность'),
+    title: 'А',
     dataIndex: 'isActive',
-    width: '10%',
+    width: '5%',
     render: (_: any, record: any) => <Checkbox checked={record.isActive} />,
     sorter: true
   },

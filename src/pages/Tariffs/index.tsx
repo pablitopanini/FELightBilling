@@ -11,11 +11,16 @@ import { getTableHandlers, getPaginationOptions } from '../../utils/helpers'
 
 function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
   const [handlers, setHandlers] = React.useState<any>({})
+  const [sortedInfo, setSortedInfo] = React.useState<any>({})
 
   React.useEffect(() => {
     props.dispatch(actions.getList())
-    setHandlers(getTableHandlers(props, actions, pageName))
-  }, [props.dispatch])
+    setHandlers(getTableHandlers(props, actions, pageName, setSortedInfo))
+  }, [])
+
+  React.useEffect(() => {
+    setHandlers(getTableHandlers(props, actions, pageName, setSortedInfo))
+  }, [props.page])
 
   return (
     <React.Fragment>
@@ -27,17 +32,20 @@ function Page(props: RouteComponentProps & IPageStore & DispatchProp) {
 
       <Table
         bordered
+        scroll={{ x: true, y: 'calc(100vh - 315px)' }}
         dataSource={props.list}
         columns={getColumns({
           handleSearch: handlers && handlers.handleSearch,
-          handleRemove: handlers && handlers.handleRemove
+          handleRemove: handlers && handlers.handleRemove,
+          sortedInfo
         })}
         pagination={{
           ...getPaginationOptions({}),
           onChange: handlers && handlers.handlePaginationChange,
           onShowSizeChange: handlers && handlers.handlePaginationShowSizeChange,
           pageSize: props.pageSize,
-          total: props.total
+          total: props.total,
+          current: props.page
         }}
         onRow={handlers && handlers.handleRowDoubleClick}
         onChange={handlers && handlers.handleTableChange}
