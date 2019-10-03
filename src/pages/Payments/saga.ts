@@ -31,7 +31,7 @@ function* getClients(action: IAction<Payload>) {
       skip: 0,
       limit: 30,
       filter: {
-        composite: action.payload
+        fullName: action.payload as string
       }
     })
 

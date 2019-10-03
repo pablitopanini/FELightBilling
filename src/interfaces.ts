@@ -62,9 +62,7 @@ export interface ISubnet {
 
 export interface IClient {
   id: number
-  name: string
-  surname: string
-  middleName: string
+  fullName: string
   login: string
   balance: number
   status: string
